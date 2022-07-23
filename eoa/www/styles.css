@@ -1,0 +1,24 @@
+
+.main-app { 
+  background-color: #3366FF;
+}
+
+.line {
+  text-align: center;
+  padding-top: 1%;
+  color: white;
+}
+
+.eoa-bar { 
+  text-align: center;
+  margin: 0% 5%;
+}
+
+.eoa-btn { 
+  margin-top: 20px
+  
+}
+
+th {
+  color:white;
+}

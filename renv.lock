@@ -9,23 +9,29 @@
     ]
   },
   "Packages": {
+    "DT": {
+      "Package": "DT",
+      "Version": "0.23",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d8f1498dc47763ce4647c8d03214d30b",
+      "Requirements": [
+        "crosstalk",
+        "htmltools",
+        "htmlwidgets",
+        "jquerylib",
+        "jsonlite",
+        "magrittr",
+        "promises"
+      ]
+    },
     "MASS": {
       "Package": "MASS",
-      "Version": "7.3-57",
+      "Version": "7.3-58",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "71476c1d88d1ebdf31580e5a257d5d31",
+      "Hash": "4bf2c61e656bbc238634c798c208d386",
       "Requirements": []
-    },
-    "Matrix": {
-      "Package": "Matrix",
-      "Version": "1.4-1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "699c47c606293bdfbc9fd78a93c9c8fe",
-      "Requirements": [
-        "lattice"
-      ]
     },
     "R6": {
       "Package": "R6",
@@ -267,7 +273,6 @@
         "glue",
         "gtable",
         "isoband",
-        "mgcv",
         "rlang",
         "scales",
         "tibble",
@@ -387,14 +392,6 @@
         "rlang"
       ]
     },
-    "lattice": {
-      "Package": "lattice",
-      "Version": "0.20-45",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "b64cdbb2b340437c4ee047a1f4c4377b",
-      "Requirements": []
-    },
     "lazyeval": {
       "Package": "lazyeval",
       "Version": "0.2.2",
@@ -433,17 +430,6 @@
         "rlang"
       ]
     },
-    "mgcv": {
-      "Package": "mgcv",
-      "Version": "1.8-40",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c6b2fdb18cf68ab613bd564363e1ba0d",
-      "Requirements": [
-        "Matrix",
-        "nlme"
-      ]
-    },
     "mime": {
       "Package": "mime",
       "Version": "0.12",
@@ -464,13 +450,11 @@
     },
     "nlme": {
       "Package": "nlme",
-      "Version": "3.1-157",
+      "Version": "3.1-158",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "dbca60742be0c9eddc5205e5c7ca1f44",
-      "Requirements": [
-        "lattice"
-      ]
+      "Hash": "9469aeaeddf4f48a7ac70877d0b7ba36",
+      "Requirements": []
     },
     "openssl": {
       "Package": "openssl",
@@ -571,10 +555,10 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.15.4",
+      "Version": "0.15.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c1078316e1d4f70275fc1ea60c0bc431",
+      "Hash": "6a38294e7d12f5d8e656b08c5bd8ae34",
       "Requirements": []
     },
     "rlang": {
@@ -648,16 +632,12 @@
     "shroomDK": {
       "Package": "shroomDK",
       "Version": "0.1.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "sdk",
-      "RemoteUsername": "FlipsideCrypto",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "2a890e653b9fe52208b5213db0e1fa6cafb38dd8",
-      "RemoteSubdir": "r/shroomDK",
-      "Hash": "b71c10ae88f00c5332e6f2f255d24291",
-      "Requirements": []
+      "Source": "unknown",
+      "Hash": "3ff435b21b1512b7ad7f271c5e787471",
+      "Requirements": [
+        "httr",
+        "jsonlite"
+      ]
     },
     "sourcetools": {
       "Package": "sourcetools",

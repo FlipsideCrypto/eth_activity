@@ -9,7 +9,6 @@ library(DT)
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
 
-
 # FUNCTIONS ----
 
 get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){ 
@@ -74,7 +73,6 @@ plot_eoa <- function(eoadh = eoa_daily_history, range = 1:21){
     )
   
   return(eoa_plotly)
-  
   
 }
 

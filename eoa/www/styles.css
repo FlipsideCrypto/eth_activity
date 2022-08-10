@@ -1,54 +1,3 @@
-/*
-
-// check this plotly
-.plotly {
-  font-family: Roboto Mono !important;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 150%;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #919EAB !important;
-}
-
-Study up on Reactable Table
-.rt-page-button-current  {
-  color: #FFF;
-}
-.rt-thead {
-  background-color: #10151A;
-  color: #FFFFFF;
-}
-
-.ReactTable {
-  background-color: #171e25;
-  color: #C4CDD5;
-  border: none;
-}
-
-.rt-th {
-  border: 0px solid #000000 !important;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  font-weight: 400;
-  font-family: Inter;
-}
-.rt-tr {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-.rt-pagination {
-  margin: 0;
-  background: #171e25;
-  opacity: 0.5;
-  border-bottom: 1px solid #C4CDD5;
-  border-top: 1px solid #C4CDD5;
-}
-*/
-
-
 
 /*******************/
 /*PUT CUSTOM CLASSES HERE*/
@@ -58,9 +7,12 @@ Study up on Reactable Table
  text-align: center;
   margin: 0% 5%; 
 }
-
 .eoa-btn { 
   margin-top: 30px;
+}
+
+.thead {
+  color: #FFFFFF;
 }
 
 
@@ -185,6 +137,13 @@ hr {
 /*****************/
 /*     GENERAL Forms     */
 /*****************/
+
+/* helps with dropdown menu conflicts w/ body */
+
+.dropdown-menu {
+    background-color: #333;
+}
+
 .form-group {
   padding: 10px 10px 0;
   margin: none !important;
@@ -247,3 +206,40 @@ input[type=number] {
   padding: 10px 0;;
 }
 
+
+/******************/
+/*    REACTABLE Tables    */
+/******************/
+
+.rt-page-button-current  {
+  color: #FFF;
+}
+.rt-thead {
+  background-color: #10151A;
+    color: #FFFFFF;
+}
+
+.ReactTable {
+  background-color: #171e25;
+    color: #C4CDD5;
+    border: none;
+}
+
+.rt-th {
+  border: 0px solid #000000 !important;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-weight: 400;
+  font-family: Inter;
+}
+.rt-tr {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.rt-pagination {
+  margin: 0;
+  background: #171e25;
+    opacity: 0.5;
+  border-bottom: 1px solid #C4CDD5;
+  border-top: 1px solid #C4CDD5;
+}

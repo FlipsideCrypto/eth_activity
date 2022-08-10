@@ -52,15 +52,17 @@ shinyUI(fluidPage(
     }),
     
     # APP START HERE -----------------------------------  
-    
-    div(class = 'header',
-        fluidRow(class = 'eoa-bar',
-                 column(11,
+    div( # re-using chart classes to make smoother outlining
+      class = 'chart-container',
+      div(
+        class = 'chart-block',
+        fluidRow(
+                 column(10, class = 'eoa-bar',
                         textInput(inputId = "address", label = "",
                                   placeholder = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
                                   width = '100%')
                  ),
-                 column(1, class = 'eoa-btn',
+                 column(2, class = 'eoa-btn',
                         actionButton("submit", label = "Search")
                  )
         ),
@@ -69,7 +71,7 @@ shinyUI(fluidPage(
                              dataTableOutput("compare")
                          )
         )
-    ),
+    )),
     
     div(
       class = 'chart-container',
@@ -81,7 +83,7 @@ shinyUI(fluidPage(
           plotlyOutput("main_plot")
         )
       )
-    ),
+    )
   
 
   

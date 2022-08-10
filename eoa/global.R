@@ -52,24 +52,37 @@ get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){
     })
           }
 
-plot_eoa <- function(eoadh = eoa_daily_history, range = 1:21){
-  
-  eoa_plot <- ggplot(eoadh[range, ], 
-                     aes(x = UNIQUE_DAYS, y = EOA_FREQ/1e6,
-                         text = paste0(
-                           "Days Active: ", UNIQUE_DAYS,
-                           "\nEOAs: ", 
-                           scales::label_comma(accuracy = 1)(EOA_FREQ))
-                     )) + 
-    geom_bar(stat = 'identity') + 
-    theme_classic() + 
-    xlab("Days Active") + ylab("# EOAs (Millions)") 
-  
-  eoa_plotly <- ggplotly(eoa_plot, tooltip = "text") %>% 
-    layout(xaxis = list(range = c(0, 20)),
-           title = list(
-             text = "Vast Majority of Ethereum Addresses Rarely Active",
-             y = 0.95)
+plot_eoa <- function(eoadh = eoa_daily_history, range = 1:200){
+
+  eoa_plotly <- plot_ly(data = eoadh[range, ], type = 'bar',
+                        x = ~UNIQUE_DAYS,
+                        y = ~EOA_FREQ/1e6,
+                        text = ~paste0(
+                          "Days Active: ", UNIQUE_DAYS,
+                          "\nEOAs: ", 
+                          scales::label_comma(accuracy = 1)(EOA_FREQ))
+  ) %>% 
+    layout(title = "",
+           yaxis = list(title = "# EOAs (Millions)", 
+                        showgrid = FALSE,
+                        color = "#FFF"), 
+           xaxis = list(title = "Days Active",
+                        showticklabels = TRUE,
+                        color = "#FFF",
+                        gridcolor = "#202933"),
+           plot_bgcolor = "transparent", 
+           paper_bgcolor = "transparent",
+           legend = list(font = list(color = '#FFFFFF'))) %>%
+    # variety of useful config options to be aware of
+    # https://plotly.com/r/configuration-options/
+    config(scrollZoom = FALSE,
+           # displayModeBar = TRUE, # default is hover
+           toImageButtonOptions = list(format= 'svg', # one of png, svg, jpeg, webp
+                                       filename= 'template_image',
+                                       height= 500,
+                                       width= 700,
+                                       scale= 1),
+           displaylogo = FALSE
     )
   
   return(eoa_plotly)

@@ -1,3 +1,4 @@
+library(shinyjs)
 library(jsonlite)
 library(httr)
 library(shroomDK)
@@ -5,6 +6,7 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 library(DT)
+library(reactable)
 
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
@@ -93,8 +95,8 @@ tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){
   
   x = data.frame(
     "Days Active" = eoa_activity$DAYS_ACTIVE,
-    "Number of Tx" = eoa_activity$NUM_TX,
-    "Active Days Percentile" = {
+    "Tx Count" = eoa_activity$NUM_TX,
+    "Percentile" = {
       paste0(
         100 * 
           round(
@@ -106,19 +108,7 @@ tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){
   )
   
   
-  datatable(x, 
-            options = list(paging = FALSE,    ## paginate the output
-                           searching = FALSE,
-                           autoWidth = TRUE, ## use smart column width handling
-                           server = FALSE,   ## use client-side processing
-                           dom = 't',
-                           columnDefs = list(list(targets = '_all', 
-                                                  className = 'dt-center'))
-            ),
-            extensions = 'Buttons',
-            filter = 'none',
-            rownames = FALSE
-  )
+  return(x)
 
 }
 

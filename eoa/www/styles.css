@@ -3,11 +3,11 @@
 /*PUT CUSTOM CLASSES HERE*/
 /*******************/
 
-.eoa-bar { 
- text-align: center;
-  margin: 0% 5%; 
+.eoa-bar {
+   text-align: center;
 }
-.eoa-btn { 
+
+.eoa-btn {
   margin-top: 30px;
 }
 
@@ -152,6 +152,7 @@ hr {
   background: #10151A;
   border: 1px solid #03FFFF;
   border-radius: 4px;
+  margin-left: 30px;
   font-family: Roboto Mono !important;
   color: #FFFFFF;
 }

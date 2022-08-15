@@ -33,6 +33,16 @@
       "Hash": "4bf2c61e656bbc238634c798c208d386",
       "Requirements": []
     },
+    "Matrix": {
+      "Package": "Matrix",
+      "Version": "1.4-1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "699c47c606293bdfbc9fd78a93c9c8fe",
+      "Requirements": [
+        "lattice"
+      ]
+    },
     "R6": {
       "Package": "R6",
       "Version": "2.5.1",
@@ -273,6 +283,7 @@
         "glue",
         "gtable",
         "isoband",
+        "mgcv",
         "rlang",
         "scales",
         "tibble",
@@ -392,6 +403,14 @@
         "rlang"
       ]
     },
+    "lattice": {
+      "Package": "lattice",
+      "Version": "0.20-45",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b64cdbb2b340437c4ee047a1f4c4377b",
+      "Requirements": []
+    },
     "lazyeval": {
       "Package": "lazyeval",
       "Version": "0.2.2",
@@ -430,6 +449,17 @@
         "rlang"
       ]
     },
+    "mgcv": {
+      "Package": "mgcv",
+      "Version": "1.8-40",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c6b2fdb18cf68ab613bd564363e1ba0d",
+      "Requirements": [
+        "Matrix",
+        "nlme"
+      ]
+    },
     "mime": {
       "Package": "mime",
       "Version": "0.12",
@@ -454,7 +484,9 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "9469aeaeddf4f48a7ac70877d0b7ba36",
-      "Requirements": []
+      "Requirements": [
+        "lattice"
+      ]
     },
     "openssl": {
       "Package": "openssl",
@@ -629,11 +661,30 @@
         "xtable"
       ]
     },
+    "shinyjs": {
+      "Package": "shinyjs",
+      "Version": "2.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "802e4786b353a4bb27116957558548d5",
+      "Requirements": [
+        "digest",
+        "jsonlite",
+        "shiny"
+      ]
+    },
     "shroomDK": {
       "Package": "shroomDK",
       "Version": "0.1.0",
-      "Source": "unknown",
-      "Hash": "3ff435b21b1512b7ad7f271c5e787471",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "sdk",
+      "RemoteUsername": "FlipsideCrypto",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "c5dd70f702d57374f294d7107109ca1819dca863",
+      "RemoteSubdir": "r/shroomDK",
+      "Hash": "020a689f6cd0bb4d8e0d7411c7fbe3ab",
       "Requirements": [
         "httr",
         "jsonlite"

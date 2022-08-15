@@ -15,8 +15,10 @@ shinyServer(function(input, output) {
         
   })
   
-  output$compare <- DT::renderDataTable({
+  output$compare <- renderReactable({
+    reactable(
    tbl_eoa(eoa_daily_history, eoa_activity = results())
+    )
   })
   
   output$main_plot <- renderPlotly({

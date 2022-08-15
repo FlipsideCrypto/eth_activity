@@ -1,5 +1,4 @@
 library(shiny)
-library(shinyjs)
 source("global.R")
 
 # Define UI -------
@@ -55,20 +54,20 @@ shinyUI(fluidPage(
     div( # re-using chart classes to make smoother outlining
       class = 'chart-container',
       div(
-        class = 'chart-block',
+        class = 'chart-block eoa-bar',
         fluidRow(
-                 column(10, class = 'eoa-bar',
+                 column(10, 
                         textInput(inputId = "address", label = "",
                                   placeholder = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
                                   width = '100%')
                  ),
-                 column(2, class = 'eoa-btn',
+                 column(2, class = 'eoa-btn', 
                         actionButton("submit", label = "Search")
                  )
         ),
         conditionalPanel("input.submit > 0",
                          div(class = 'eoa-tbl',
-                             dataTableOutput("compare")
+                             reactableOutput("compare")
                          )
         )
     )),

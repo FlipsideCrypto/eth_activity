@@ -1,7 +1,7 @@
 library(shiny)
 source("global.R")
 # Define server logic 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
   results <- eventReactive(input$submit, {
     
@@ -15,14 +15,22 @@ shinyServer(function(input, output) {
         
   })
   
-  output$compare <- renderReactable({
-    reactable(
-   tbl_eoa(eoa_daily_history, eoa_activity = results())
-    )
+  eoa_stats <- reactive({
+    tbl_eoa(eoa_daily_history, eoa_activity = results())
   })
+
+ output$compare <- renderUI({
+   tagList(
+     lapply(names(eoa_stats()), FUN = function(x){
+       card_eoa(x, eoa_stats()[[x]])
+     })
+   )
+ })
   
   output$main_plot <- renderPlotly({
     plot_eoa(eoadh = eoa_daily_history)
   })
+  
+ 
 
 })

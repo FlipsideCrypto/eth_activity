@@ -51,40 +51,38 @@ shinyUI(fluidPage(
     }),
     
     # APP START HERE -----------------------------------  
-    div( # re-using chart classes to make smoother outlining
-      class = 'chart-container',
-      div(
-        class = 'chart-block eoa-bar',
+   
+    div(class = 'chart-block',
         fluidRow(
                  column(10, 
                         textInput(inputId = "address", label = "",
                                   placeholder = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-                                  width = '100%')
-                 ),
-                 column(2, class = 'eoa-btn', 
-                        actionButton("submit", label = "Search")
-                 )
-        ),
-        conditionalPanel("input.submit > 0",
-                         div(class = 'eoa-tbl',
-                             reactableOutput("compare")
-                         )
+                                  width = '90%')),
+                 column(2, class = 'eoa-btn',
+                        actionButton("submit", label = "Search", width = '90%'))
         )
-    )),
+    ),
     
     div(
       class = 'chart-container',
       div(
         class = 'chart-block',
         div(class = 'chart-title', span('ETH EOA Activity')),
-        div(
-          class = 'chart',
-          plotlyOutput("main_plot")
+       div(class = 'chart', 
+           fluidRow(
+          column(3,
+            conditionalPanel("input.submit > 0",
+                                  div(class = 'eoa-tbl',
+                                      uiOutput('compare'))
+            )
+          ),
+          column(9,
+                   plotlyOutput("main_plot")
+                 )
         )
+       )
       )
     )
-  
-
   
 ) # end FluidPage
 ) # end shinyUI

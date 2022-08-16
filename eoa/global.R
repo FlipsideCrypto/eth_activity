@@ -54,24 +54,30 @@ get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){
     })
           }
 
-plot_eoa <- function(eoadh = eoa_daily_history, range = 1:200){
+plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
 
-  eoa_plotly <- plot_ly(data = eoadh[range, ], type = 'bar',
-                        x = ~UNIQUE_DAYS,
-                        y = ~EOA_FREQ/1e6,
-                        text = ~paste0(
-                          "Days Active: ", UNIQUE_DAYS,
+  eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
+    summarise(sum_eoa = sum(EOA_FREQ))
+  
+  eoa_plotly <- plot_ly(data = eoadh, type = 'bar',
+                        x = ~eoa_bucket,
+                        y = ~sum_eoa/1e6,
+                        hoverinfo = 'text',
+                        hovertext = ~paste0(
+                          "Days Active: ", eoa_bucket,
                           "\nEOAs: ", 
-                          scales::label_comma(accuracy = 1)(EOA_FREQ))
+                          scales::label_comma(accuracy = 1)(sum_eoa))
   ) %>% 
-    layout(title = "",
+    layout(title = "ETH Accounts by their Historic Days Active",
+           font = list(
+               family = "Inter",
+               color = 'white'),
            yaxis = list(title = "# EOAs (Millions)", 
                         showgrid = FALSE,
                         color = "#FFF"), 
            xaxis = list(title = "Days Active",
                         showticklabels = TRUE,
-                        color = "#FFF",
-                        gridcolor = "#202933"),
+                        color = "#FFF"),
            plot_bgcolor = "transparent", 
            paper_bgcolor = "transparent",
            legend = list(font = list(color = '#FFFFFF'))) %>%
@@ -87,16 +93,18 @@ plot_eoa <- function(eoadh = eoa_daily_history, range = 1:200){
            displaylogo = FALSE
     )
   
+
+  
   return(eoa_plotly)
   
 }
 
 tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){
   
-  x = data.frame(
+  list(
+    "TX Count" = eoa_activity$NUM_TX,
     "Days Active" = eoa_activity$DAYS_ACTIVE,
-    "Tx Count" = eoa_activity$NUM_TX,
-    "Percentile" = {
+    "Days Active %tile" = {
       paste0(
         100 * 
           round(
@@ -104,13 +112,30 @@ tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){
             4),
         "%"
       )
-    },row.names = NULL, check.names = FALSE
+    }
   )
-  
-  
-  return(x)
-
+ 
 }
+
+card_eoa <- function(card_value, card_label){ 
+    # Creates a card using html
+HTML(
+  paste0(
+  '<div class="card" style="border-style: solid;width: 150px;height: 150px;">
+    <div class="card-body" style="text-align: center;">
+      <p class="card-value" style="font-size: 24;">',
+  card_value,
+  '</p><p class="card-label" style="
+    text-align: center;
+    font-size: 20;
+">',
+  card_label,
+  '</p></div></div>'
+  )
+)
+  
+  }
+  
 
 # EOA Daily History (query updates DAILY) ----
 
@@ -118,6 +143,11 @@ eoa_daily_history <- fromJSON(
   paste0("https://node-api.flipsidecrypto.com/api/v2/queries/",
          "49534ded-30f3-450a-8d31-558cb159966e/data/latest")
 )
+
+
+eoa_daily_history$eoa_bucket <- cut(eoa_daily_history$UNIQUE_DAYS,
+                                    breaks = c(0, 1,10,100,1000, Inf),
+                                    labels = c("1","2-10","11-100","101-1000","1001+"))
 
 eoa_daily_history <- eoa_daily_history %>% 
   mutate(eoa_proportion = EOA_FREQ/sum(EOA_FREQ),

@@ -5,8 +5,6 @@ library(shroomDK)
 library(ggplot2)
 library(plotly)
 library(dplyr)
-library(DT)
-library(reactable)
 
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
@@ -121,14 +119,11 @@ card_eoa <- function(card_value, card_label){
     # Creates a card using html
 HTML(
   paste0(
-  '<div class="card" style="border-style: solid;width: 150px;height: 150px;">
-    <div class="card-body" style="text-align: center;">
-      <p class="card-value" style="font-size: 24;">',
+  '<div class="card">
+    <div class="card-body">
+      <p class="card-value">',
   card_value,
-  '</p><p class="card-label" style="
-    text-align: center;
-    font-size: 20;
-">',
+  '</p><p class="card-label">',
   card_label,
   '</p></div></div>'
   )

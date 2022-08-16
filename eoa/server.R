@@ -22,7 +22,7 @@ shinyServer(function(input, output, session) {
  output$compare <- renderUI({
    tagList(
      lapply(names(eoa_stats()), FUN = function(x){
-       card_eoa(x, eoa_stats()[[x]])
+       card_eoa(eoa_stats()[[x]], x)
      })
    )
  })
@@ -31,6 +31,4 @@ shinyServer(function(input, output, session) {
     plot_eoa(eoadh = eoa_daily_history)
   })
   
- 
-
 })

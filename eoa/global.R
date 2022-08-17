@@ -73,7 +73,6 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
 
   eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
     summarise(sum_eoa = sum(EOA_FREQ))
-
   
   eoa_plotly <- plot_ly(data = eoadh, 
                         type = 'bar',
@@ -85,11 +84,32 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
                           "Days Active: ", eoa_bucket,
                           "\nEOAs: ", 
                           scales::label_comma(accuracy = 1)(sum_eoa))
-  ) %>% 
+  ) 
+  
+  if(!is.null(label)){
+    
+    eoadh$label <- c("Others")
+    eoadh$label[eoadh$eoa_bucket == a$x] <- "You"
+    
+    eoa_plotly <- eoadh %>% plot_ly(x = ~eoa_bucket,
+                      y = ~sum_eoa/1e6,
+                      color = ~label,
+                      colors = c("#1C6DB8","#d99d45"),
+                      type = "bar",
+                         hoverinfo = 'text',
+                         hovertext = ~paste0(
+                           "Days Active: ", eoa_bucket,
+                           "\nEOAs: ", 
+                           scales::label_comma(accuracy = 1)(sum_eoa))
+   )
+   
+  }
+  
+  eoa_plotly <- eoa_plotly %>% 
     layout(title = "ETH Accounts by their Historic Days Active",
            font = list(
-               family = "Inter",
-               color = 'white'),
+             family = "Inter",
+             color = 'white'),
            yaxis = list(title = "# EOAs (Millions)", 
                         showgrid = FALSE,
                         color = "#FFF"), 
@@ -102,18 +122,8 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
     # variety of useful config options to be aware of
     # https://plotly.com/r/configuration-options/
     config(scrollZoom = FALSE,
-           # displayModeBar = TRUE, # default is hover
-           toImageButtonOptions = list(format= 'svg', # one of png, svg, jpeg, webp
-                                       filename= 'template_image',
-                                       height= 500,
-                                       width= 700,
-                                       scale= 1),
-           displaylogo = FALSE
-    ) 
-  
-  if(!is.null(label)){
-   eoa_plotly <-eoa_plotly %>% layout(annotations = label)
-  }
+            displayModeBar = FALSE, 
+           displaylogo = FALSE)
   
   return(eoa_plotly)
   

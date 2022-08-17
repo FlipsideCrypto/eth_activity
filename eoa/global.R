@@ -118,7 +118,8 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
                         color = "#FFF"),
            plot_bgcolor = "transparent", 
            paper_bgcolor = "transparent",
-           legend = list(font = list(color = '#FFFFFF'))) %>%
+           legend = list(font = list(color = '#FFFFFF')),
+           hovermode = 'x') %>%
     # variety of useful config options to be aware of
     # https://plotly.com/r/configuration-options/
     config(scrollZoom = FALSE,

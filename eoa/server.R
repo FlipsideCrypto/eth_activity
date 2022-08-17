@@ -20,10 +20,7 @@ shinyServer(function(input, output, session) {
  output$compare <- renderUI({
    tagList(
      lapply(names(eoa_stats()), 
-            FUN = function(x){card_eoa(eoa_stats()[[x]], x)}),
-     div(class = 'stats-box',
-     a(class='twitter socials', href='https://twitter.com','Share:')
-     )
+            FUN = function(x){card_eoa(eoa_stats()[[x]], x)})
    )
  })
   
@@ -36,14 +33,8 @@ shinyServer(function(input, output, session) {
      a <- list(
        x = cut(as.numeric(results()[["Days Active"]]),
                breaks = c(0, 1,10,100,1000, Inf),
-               labels = c("1","2-10","11-100","101-1000","1001+")),
-       y = 10,
-       text = "    You're here!", # alignment is so annoying
-       xref = "x",
-       yref = "y",
-       showarrow = FALSE,
-       arrowhead = 1,
-       xanchor = 'left')
+               labels = c("1","2-10","11-100","101-1000","1001+"))
+     )
      
      plot_eoa(eoadh = eoa_daily_history, label = a)
    }

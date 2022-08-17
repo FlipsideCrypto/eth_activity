@@ -4,7 +4,7 @@ source("global.R")
 # Define UI -------
 
 shinyUI(fluidPage(
-    title = 'TITLE',
+    title = 'ETH Activity',
     useShinyjs(),
     
     tags$head(
@@ -54,7 +54,7 @@ shinyUI(fluidPage(
    
     div(class = 'chart-block',
         fluidRow(
-                 column(10, 
+                 column(10,
                         textInput(inputId = "address", label = "",
                                   placeholder = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
                                   width = '90%')),
@@ -67,7 +67,7 @@ shinyUI(fluidPage(
       class = 'chart-container',
       div(
         class = 'chart-block',
-        div(class = 'chart-title', span('ETH EOA Activity')),
+        div(class = 'chart-title', span('Your ETH Activity')),
        div(class = 'chart', 
            fluidRow(
           column(3,

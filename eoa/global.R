@@ -9,6 +9,23 @@ library(dplyr)
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
 
+# EOA Daily History (query updates DAILY) ----
+
+eoa_daily_history <- fromJSON(
+  paste0("https://node-api.flipsidecrypto.com/api/v2/queries/",
+         "49534ded-30f3-450a-8d31-558cb159966e/data/latest")
+)
+
+
+eoa_daily_history$eoa_bucket <- cut(eoa_daily_history$UNIQUE_DAYS,
+                                    breaks = c(0, 1,10,100,1000, Inf),
+                                    labels = c("1","2-10","11-100","101-1000","1001+"))
+
+eoa_daily_history <- eoa_daily_history %>% 
+  mutate(eoa_proportion = EOA_FREQ/sum(EOA_FREQ),
+         eoa_cumulative = cumsum(EOA_FREQ),
+         eoa_cumprop = cumsum(eoa_proportion))
+
 # FUNCTIONS ----
 
 get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){ 
@@ -56,8 +73,11 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
 
   eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
     summarise(sum_eoa = sum(EOA_FREQ))
+
   
-  eoa_plotly <- plot_ly(data = eoadh, type = 'bar',
+  eoa_plotly <- plot_ly(data = eoadh, 
+                        type = 'bar',
+                        color = I("#1C6DB8"),
                         x = ~eoa_bucket,
                         y = ~sum_eoa/1e6,
                         hoverinfo = 'text',
@@ -89,9 +109,11 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
                                        width= 700,
                                        scale= 1),
            displaylogo = FALSE
-    )
+    ) 
   
-
+  if(!is.null(label)){
+   eoa_plotly <-eoa_plotly %>% layout(annotations = label)
+  }
   
   return(eoa_plotly)
   
@@ -132,20 +154,4 @@ HTML(
   }
   
 
-# EOA Daily History (query updates DAILY) ----
-
-eoa_daily_history <- fromJSON(
-  paste0("https://node-api.flipsidecrypto.com/api/v2/queries/",
-         "49534ded-30f3-450a-8d31-558cb159966e/data/latest")
-)
-
-
-eoa_daily_history$eoa_bucket <- cut(eoa_daily_history$UNIQUE_DAYS,
-                                    breaks = c(0, 1,10,100,1000, Inf),
-                                    labels = c("1","2-10","11-100","101-1000","1001+"))
-
-eoa_daily_history <- eoa_daily_history %>% 
-  mutate(eoa_proportion = EOA_FREQ/sum(EOA_FREQ),
-         eoa_cumulative = cumsum(EOA_FREQ),
-         eoa_cumprop = cumsum(eoa_proportion))
 

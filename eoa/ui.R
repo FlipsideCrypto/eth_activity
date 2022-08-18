@@ -9,7 +9,6 @@ shinyUI(fluidPage(
     
     tags$head(
       tags$link(rel = 'stylesheet', type = 'text/css', href = 'styles.css'),
-      tags$link(rel = 'icon', href = 'fliptrans.png'),
       tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Roboto+Mono'),
       tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Inter')
     ),

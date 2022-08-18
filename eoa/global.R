@@ -1,10 +1,10 @@
-library(shinyjs)
+library(ggplot2)
+library(dplyr)
+library(plotly)
 library(jsonlite)
 library(httr)
 library(shroomDK)
-library(ggplot2)
-library(plotly)
-library(dplyr)
+library(shinyjs)
 
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
@@ -73,48 +73,48 @@ get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){
     })
           }
 
-plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
+plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
 
   eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
     summarise(sum_eoa = sum(EOA_FREQ))
   
-  eoa_plotly <- plot_ly(data = eoadh, 
-                        type = 'bar',
-                        color = I("#1C6DB8"),
-                        x = ~eoa_bucket,
-                        y = ~sum_eoa/1e6,
-                        hoverinfo = 'text',
-                        hovertext = ~paste0(
-                          "Days Active: ", eoa_bucket,
-                          "\nEOAs: ", 
-                          scales::label_comma(accuracy = 1)(sum_eoa))
-  ) 
-  
-  if(!is.null(label)){
-    
-    eoadh$label <- c("Others")
-    eoadh$label[eoadh$eoa_bucket == label$x] <- "You"
+  if(is.null(user_bar)){
     
     eoa_plotly <- eoadh %>% plot_ly(x = ~eoa_bucket,
-                      y = ~sum_eoa/1e6,
-                      color = ~label,
-                      colors = c("#1C6DB8","#d99d45"),
-                      type = "bar",
-                         hoverinfo = 'text',
-                         hovertext = ~paste0(
-                           "Days Active: ", eoa_bucket,
-                           "\nEOAs: ", 
-                           scales::label_comma(accuracy = 1)(sum_eoa))
-   )
-   
+                                    y = ~sum_eoa/1e6,
+                                    color = I("#1C6DB8"),
+                                    type = "bar",
+                                    hoverinfo = 'text',
+                                    hovertext = ~paste0(
+                                      "Days Active: ", eoa_bucket,
+                                      "\nAddresses: ", 
+                                      scales::label_comma(accuracy = 1)(sum_eoa)))
+    
+  } else { 
+    
+    eoadh$lab <- c("Others")
+    eoadh$lab[eoadh$eoa_bucket == user_bar] <- "You"
+    eoadh$lab <- as.factor(eoadh$lab)
+    
+    eoa_plotly <- eoadh %>% plot_ly(x = ~eoa_bucket,
+                                    y = ~sum_eoa/1e6,
+                                    type = 'bar',
+                                    color = ~lab,
+                                    colors = c("#1C6DB8","#d99d45"),
+                                    hoverinfo = 'text',
+                                    hovertext = ~paste0(
+                                      "Days Active: ", eoa_bucket,
+                                      "\nAddresses: ", 
+                                      scales::label_comma(accuracy = 1)(sum_eoa)))
   }
+  
   
   eoa_plotly <- eoa_plotly %>% 
     layout(title = "ETH Accounts by their Historic Days Active",
            font = list(
              family = "Inter",
              color = 'white'),
-           yaxis = list(title = "# EOAs (Millions)", 
+           yaxis = list(title = "# Addresses (Millions)", 
                         showgrid = FALSE,
                         color = "#FFF"), 
            xaxis = list(title = "Days Active",
@@ -124,10 +124,8 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
            paper_bgcolor = "transparent",
            legend = list(font = list(color = '#FFFFFF')),
            hovermode = 'x') %>%
-    # variety of useful config options to be aware of
-    # https://plotly.com/r/configuration-options/
     config(scrollZoom = FALSE,
-            displayModeBar = FALSE, 
+           displayModeBar = FALSE, 
            displaylogo = FALSE)
   
   return(eoa_plotly)

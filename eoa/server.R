@@ -17,6 +17,7 @@ shinyServer(function(input, output, session) {
   eoa_stats <- reactive({
     tbl_eoa(eoa_daily_history, eoa_activity = results())
   })
+  
 
  output$compare <- renderUI({
    tagList(
@@ -31,13 +32,12 @@ shinyServer(function(input, output, session) {
      plot_eoa(eoadh = eoa_daily_history)
      
    } else { 
-     a <- list(
-       x = cut(as.numeric(results()[["Days Active"]]),
+     
+     x = cut(as.numeric(eoa_stats()[["Days Active"]]),
                breaks = c(0, 1,10,100,1000, Inf),
                labels = c("1","2-10","11-100","101-1000","1001+"))
-     )
      
-     plot_eoa(eoadh = eoa_daily_history, label = a)
+     plot_eoa(eoadh = eoa_daily_history, x)
    }
  })
  

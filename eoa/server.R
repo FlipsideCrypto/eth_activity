@@ -6,10 +6,11 @@ shinyServer(function(input, output, session) {
   results <- eventReactive(input$submit, {
     if(nchar(input$address) != 42 | !grepl("^0x", input$address)){
       stop("Double check address is a valid ETH address (not ENS)")
+      
     } else {
-      get_eoa_activity(eoa_address = input$address, 
-                     api_key = readLines("api_key.txt"),
-                     ttl = 0)
+        get_eoa_activity(eoa_address = input$address, 
+                         api_key = readLines("api_key.txt"),
+                         ttl = 0)
     }
   })
   

@@ -58,6 +58,10 @@ get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){
   res <- get_query_from_token(query_token$token, 
                                         api_key = api_key)
   
+  if(length(res$results) == 0){
+    stop("Double check that address is typed correctly, no transactions found.")
+  }
+  
   incProgress(amount = 0.2, 
               detail = "Cleaning Result...")
   
@@ -89,7 +93,7 @@ plot_eoa <- function(eoadh = eoa_daily_history, label = NULL){
   if(!is.null(label)){
     
     eoadh$label <- c("Others")
-    eoadh$label[eoadh$eoa_bucket == a$x] <- "You"
+    eoadh$label[eoadh$eoa_bucket == label$x] <- "You"
     
     eoa_plotly <- eoadh %>% plot_ly(x = ~eoa_bucket,
                       y = ~sum_eoa/1e6,

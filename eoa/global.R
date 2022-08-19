@@ -124,7 +124,7 @@ plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
            paper_bgcolor = "transparent",
            legend = list(font = list(color = '#FFFFFF')),
            hovermode = 'x') %>%
-    config(scrollZoom = FALSE,
+    plotly::config(scrollZoom = FALSE,
            displayModeBar = FALSE, 
            displaylogo = FALSE)
   

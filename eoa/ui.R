@@ -67,8 +67,12 @@ shinyUI(fluidPage(
       div(
         class = 'chart-block',
         div(class = 'chart-title', span('Your ETH Activity')),
-       div(class = 'chart', 
-           fluidRow(
+            div(class = 'heat',
+              conditionalPanel("input.submit > 0",
+                               uiOutput('heatmap'))
+              ),
+        div(class = 'chart', 
+            fluidRow(
           column(3,
             conditionalPanel("input.submit > 0",
                                   div(class = 'eoa-tbl',

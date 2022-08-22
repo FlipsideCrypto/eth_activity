@@ -45,4 +45,13 @@ shinyServer(function(input, output, session) {
    plot_()
   })
   
+ heat_ <- eventReactive(input$submit, {
+   get_tx_by_day(input$address, api_key = readLines("api_key.txt"))
+ })  
+ 
+ output$heatmap <- renderUI({
+   tagList(
+     renderCalheatmapR(plot_tx(heat_())))
+ })
+  
 })

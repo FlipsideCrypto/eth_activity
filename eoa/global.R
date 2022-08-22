@@ -5,6 +5,7 @@ library(jsonlite)
 library(httr)
 library(shroomDK)
 library(shinyjs)
+library(calheatmapR)
 
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
@@ -73,6 +74,54 @@ get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){
     })
           }
 
+
+get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
+ 
+  withProgress(message = "Querying...", detail = "", expr = {
+    
+    query <- {
+      "SELECT FROM_ADDRESS as eoa, 
+       date_trunc('DAY', block_timestamp) as day_,
+  count(*) as num_tx
+  FROM ethereum.core.fact_transactions
+  WHERE FROM_ADDRESS = lower('_EOA_ADDRESS_')
+  GROUP BY day_, eoa
+"
+    }
+    
+    query <- gsub(pattern = "_EOA_ADDRESS_", replacement = tolower(eoa_address),
+                  x = query, fixed = TRUE)
+    
+    incProgress(amount = 0.1,
+               detail = "Query Created")
+    
+    query_token <- create_query_token(query = query, 
+                                      api_key = api_key, 
+                                      ttl = ttl,
+                                      cache = FALSE)
+    incProgress(amount = 0.2,
+                detail = "Calculating...")
+    
+    res <- get_query_from_token(query_token$token, 
+                                api_key = api_key)
+    
+    if(length(res$results) == 0){
+      stop("Double check that address is typed correctly, no transactions found.")
+    }
+    
+    incProgress(amount = 0.2, 
+                detail = "Cleaning Result...")
+    
+    df <- clean_query(res)
+    
+    incProgress(0.5, 
+                 detail = "Done!")
+    
+    return(df)
+  })
+  
+}
+
 plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
 
   eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
@@ -131,6 +180,20 @@ plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
   return(eoa_plotly)
   
 }
+
+plot_tx <- function(eoa_tx){ 
+  
+  eoa_tx$date <- as.Date(eoa_tx$DAY_)
+  eoa_tx$tstamp <- as.numeric(as.POSIXct(eoa_tx$date))
+
+  eoa_tx_list <- as.list(eoa_tx$NUM_TX)
+  names(eoa_tx_list) <- eoa_tx$tstamp
+  eoa_tx_list
+  
+  calheatmapR(data = eoa_tx_list) %>%
+    chDomain(domain = "month", subDomain = "day", start = Sys.Date()-365, range = 13)
+  
+  }
 
 tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){
   

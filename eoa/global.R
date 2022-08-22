@@ -72,7 +72,6 @@ get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){
     })
           }
 
-
 get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
  
   withProgress(message = "Querying...", detail = "", expr = {
@@ -179,9 +178,7 @@ plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
   
 }
 
-plot_tx <- function(eoa_tx){ 
-  
-  plot_heat <- function(eoa_tx){ 
+plot_tx <- function(eoa_tx){
     
     eoa_tx$date <- as.Date(eoa_tx$DAY_)
     eoa_tx$tstamp <- as.numeric(as.POSIXct(eoa_tx$date))
@@ -211,16 +208,25 @@ plot_tx <- function(eoa_tx){
     data <- data[, c("dates_in_year","week","month", "day", "NUM_TX")]
     data$NUM_TX[is.na(data$NUM_TX)] <- 0
     
+    monthlabel = data %>% 
+      group_by(month) %>% 
+      summarise(w1 = first(week)) %>% 
+      dplyr::arrange(w1)
+    
     p <- plot_ly(data = data)
     p <- add_heatmap(p = p, x = ~week,
                      y = ~day, 
-                     z = ~NUM_TX,
+                     z = ~NUM_TX*5, # scale up for better coloring 
                      text = paste0(
                        data$day,", ",
                        data$dates_in_year,
                        "\nTransactions:",
                        data$NUM_TX
                      ), 
+                     colors = 'Greens',
+                     zauto = FALSE, 
+                     zmax = 30, 
+                     zmin = 0,
                      hoverinfo = 'text',
                      xgap = 3,
                      ygap = 3,
@@ -234,18 +240,19 @@ plot_tx <- function(eoa_tx){
         tickmode="array",
         ticktext=data$day[1:7],
         tickvals=c(0,1,2,3,4,5,6),
-        title="Days",
+        title="",
         autorange = 'reversed'
       ),
       xaxis= list(
         showline = FALSE,
         showgrid = FALSE,
-        zeroline = FALSE
+        zeroline = FALSE,
+        ticktext = c(monthlabel$month,monthlabel$month[1]),
+        tickvals = c(monthlabel$w1, max(monthlabel$w1)+4),
+        title = ""
       ),
       plot_bgcolor=('#FFF') #making grid appear black
     )
-    
-  }
   }
 
 tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){

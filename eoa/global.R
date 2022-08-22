@@ -5,8 +5,6 @@ library(jsonlite)
 library(httr)
 library(shroomDK)
 library(shinyjs)
-library(calheatmapR)
-
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
 
@@ -183,16 +181,71 @@ plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
 
 plot_tx <- function(eoa_tx){ 
   
-  eoa_tx$date <- as.Date(eoa_tx$DAY_)
-  eoa_tx$tstamp <- as.numeric(as.POSIXct(eoa_tx$date))
-
-  eoa_tx_list <- as.list(eoa_tx$NUM_TX)
-  names(eoa_tx_list) <- eoa_tx$tstamp
-  eoa_tx_list
-  
-  calheatmapR(data = eoa_tx_list) %>%
-    chDomain(domain = "month", subDomain = "day", start = Sys.Date()-365, range = 13)
-  
+  plot_heat <- function(eoa_tx){ 
+    
+    eoa_tx$date <- as.Date(eoa_tx$DAY_)
+    eoa_tx$tstamp <- as.numeric(as.POSIXct(eoa_tx$date))
+    
+    eoa_tx_list <- as.list(eoa_tx$NUM_TX)
+    names(eoa_tx_list) <- eoa_tx$tstamp
+    
+    maxdate <- Sys.Date()
+    mindate <- Sys.Date() - 391
+    
+    d <- data.frame(
+      dates_in_year = seq.Date(mindate, maxdate, by = 'day')
+    )
+    
+    d$month <- format(d$dates_in_year, '%b')
+    d$day <- weekdays(d$dates_in_year)
+    
+    # start on Monday
+    d <- d[which(d$day == "Monday")[1]:length(d$day), ]
+    d$week <- ceiling(nrow(d)/7) # fill last week number *
+    # infill previous weeks (1,1,1,1,1,1,1,2,2,2,2,2,2,2,.... N,N,N,N,N,N,N,*)
+    fillweek = floor(nrow(d)/7)*7
+    d$week[1:fillweek] <- unlist(lapply(1:(nrow(d)/7), replicate, n = 7))
+    
+    
+    data <- merge(d, eoa_tx, by.x = "dates_in_year", by.y = "date", all.x = TRUE)
+    data <- data[, c("dates_in_year","week","month", "day", "NUM_TX")]
+    data$NUM_TX[is.na(data$NUM_TX)] <- 0
+    
+    p <- plot_ly(data = data)
+    p <- add_heatmap(p = p, x = ~week,
+                     y = ~day, 
+                     z = ~NUM_TX,
+                     text = paste0(
+                       data$day,", ",
+                       data$dates_in_year,
+                       "\nTransactions:",
+                       data$NUM_TX
+                     ), 
+                     hoverinfo = 'text',
+                     xgap = 3,
+                     ygap = 3,
+                     showscale = FALSE)
+    
+    p %>% layout(
+      yaxis=list(
+        showline = FALSE,
+        showgrid = FALSE,
+        zeroline = FALSE,
+        tickmode="array",
+        ticktext=data$day[1:7],
+        tickvals=c(0,1,2,3,4,5,6),
+        title="Days",
+        autorange = 'reversed'
+      ),
+      xaxis= list(
+        showline = FALSE,
+        showgrid = FALSE,
+        zeroline = FALSE
+      ),
+      plot_bgcolor=('#FFF') #making grid appear black
+    )
+    
+  }
   }
 
 tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){

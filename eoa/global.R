@@ -27,51 +27,6 @@ eoa_daily_history <- eoa_daily_history %>%
 
 # FUNCTIONS ----
 
-get_eoa_activity <- function(eoa_address, api_key = api_key, ttl = 0){ 
-  
-  withProgress(message = "Querying...", detail = "", expr = {
-    
-  query <- {
-  "SELECT FROM_ADDRESS as eoa, 
-  count(DISTINCT(date_trunc('DAY', block_timestamp))) as days_active,
-  count(*) as num_tx
-  FROM ethereum.core.fact_transactions
-  WHERE FROM_ADDRESS = lower('_EOA_ADDRESS_')
-  GROUP BY eoa
-"
-  }
-  
-  query <- gsub(pattern = "_EOA_ADDRESS_", replacement = tolower(eoa_address),
-                x = query, fixed = TRUE)
-
-  incProgress(amount = 0.1,
-              detail = "Query Created")
-  
-  query_token <- create_query_token(query = query, 
-                                    api_key = api_key, 
-                                    ttl = ttl,
-                                    cache = FALSE)
-  incProgress(amount = 0.2,
-              detail = "Calculating...")
-  
-  res <- get_query_from_token(query_token$token, 
-                                        api_key = api_key)
-  
-  if(length(res$results) == 0){
-    stop("Double check that address is typed correctly, no transactions found.")
-  }
-  
-  incProgress(amount = 0.2, 
-              detail = "Cleaning Result...")
-  
-  df <- clean_query(res)
-  
-  incProgress(0.5, 
-              detail = "Done!")
-  return(df)
-    })
-          }
-
 get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
  
   withProgress(message = "Querying...", detail = "", expr = {
@@ -180,12 +135,6 @@ plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
 
 plot_tx <- function(eoa_tx){
     
-    eoa_tx$date <- as.Date(eoa_tx$DAY_)
-    eoa_tx$tstamp <- as.numeric(as.POSIXct(eoa_tx$date))
-    
-    eoa_tx_list <- as.list(eoa_tx$NUM_TX)
-    names(eoa_tx_list) <- eoa_tx$tstamp
-    
     maxdate <- Sys.Date()
     mindate <- Sys.Date() - 391
     
@@ -216,61 +165,51 @@ plot_tx <- function(eoa_tx){
     p <- plot_ly(data = data)
     p <- add_heatmap(p = p, x = ~week,
                      y = ~day, 
-                     z = ~NUM_TX*5, # scale up for better coloring 
+                     z = ~NUM_TX*10, # scale up for better coloring 
                      text = paste0(
                        data$day,", ",
                        data$dates_in_year,
                        "\nTransactions:",
                        data$NUM_TX
                      ), 
-                     colors = 'Greens',
+                     colors = 'Blues',
                      zauto = FALSE, 
-                     zmax = 30, 
+                     zmax = 25, 
                      zmin = 0,
                      hoverinfo = 'text',
                      xgap = 3,
                      ygap = 3,
                      showscale = FALSE)
     
-    p %>% layout(
-      yaxis=list(
-        showline = FALSE,
-        showgrid = FALSE,
-        zeroline = FALSE,
-        tickmode="array",
-        ticktext=data$day[1:7],
-        tickvals=c(0,1,2,3,4,5,6),
-        title="",
-        autorange = 'reversed'
-      ),
-      xaxis= list(
-        showline = FALSE,
-        showgrid = FALSE,
-        zeroline = FALSE,
-        ticktext = c(monthlabel$month,monthlabel$month[1]),
-        tickvals = c(monthlabel$w1, max(monthlabel$w1)+4),
-        title = ""
-      ),
-      plot_bgcolor=('#FFF') #making grid appear black
-    )
-  }
-
-tbl_eoa <- function(eoadh = eoa_daily_history, eoa_activity){
-  
-  list(
-    "TX Count" = eoa_activity$NUM_TX,
-    "Days Active" = eoa_activity$DAYS_ACTIVE,
-    "Days Active %tile" = {
-      paste0(
-        100 * 
-          round(
-            eoadh[eoadh$UNIQUE_DAYS == eoa_activity$DAYS_ACTIVE, "eoa_cumprop"],
-            4),
-        "%"
-      )
-    }
-  )
- 
+    p %>% layout(title = "",
+                 font = list(
+                   family = "Inter",
+                   color = 'white'),
+                 plot_bgcolor = "transparent", 
+                 paper_bgcolor = "transparent",
+                 yaxis=list(
+                   showline = FALSE,
+                   color = "#FFF",
+                   showgrid = FALSE,
+                   zeroline = FALSE,
+                   tickmode="array",
+                   ticktext=data$day[1:7],
+                   tickvals=c(0,1,2,3,4,5,6),
+                   title="",
+                   autorange = 'reversed'
+                 ),
+                 xaxis= list(
+                   showline = FALSE,
+                   showgrid = FALSE,
+                   zeroline = FALSE,
+                   color = "#FFF",
+                   ticktext = c(monthlabel$month,monthlabel$month[1]),
+                   tickvals = c(monthlabel$w1, max(monthlabel$w1)+4),
+                   title = ""
+                 )) %>%
+      plotly::config(scrollZoom = FALSE,
+                     displayModeBar = FALSE, 
+                     displaylogo = FALSE)
 }
 
 card_eoa <- function(card_value, card_label){ 

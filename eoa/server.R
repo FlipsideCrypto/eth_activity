@@ -8,14 +8,32 @@ shinyServer(function(input, output, session) {
       stop("Double check address is a valid ETH address (not ENS)")
       
     } else {
-        get_eoa_activity(eoa_address = input$address, 
+       x <- get_tx_by_day(eoa_address = input$address, 
                          api_key = readLines("api_key.txt"),
                          ttl = 0)
+       x$date <- as.Date(x$DAY_)
+       return(x)
     }
   })
   
+  observe({
+  rr <<- results()  
+  })
+  
   eoa_stats <- reactive({
-    tbl_eoa(eoa_daily_history, eoa_activity = results())
+    
+    eoa_activity <- list(
+      "TX Count" = sum(results()$NUM_TX),
+      "Days Active" = length(unique(results()$date)),
+      "Activity Score" = {
+        paste0(
+          100 * 
+            round(
+              eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == length(unique(results()$date)), "eoa_cumprop"],
+              4)
+        )
+      }
+    )
   })
   
 
@@ -44,14 +62,9 @@ shinyServer(function(input, output, session) {
   output$main_plot <- renderPlotly({
    plot_()
   })
-  
- heat_ <- eventReactive(input$submit, {
-   get_tx_by_day(input$address, api_key = readLines("api_key.txt"))
- })  
  
- output$heatmap <- renderUI({
-   tagList(
-     renderCalheatmapR(plot_tx(heat_())))
+ output$heatmap <- renderPlotly({
+   plot_tx(results())
  })
   
 })

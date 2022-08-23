@@ -96,22 +96,6 @@
         "rlang"
       ]
     },
-    "calheatmapR": {
-      "Package": "calheatmapR",
-      "Version": "0.1",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "calheatmapR",
-      "RemoteUsername": "durtal",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "cc7c8ef1ffa4d7df88469fe3fb428454f5fdc5b1",
-      "Hash": "aef5f7f7670eef3944ee382f342e6204",
-      "Requirements": [
-        "htmlwidgets",
-        "magrittr"
-      ]
-    },
     "cli": {
       "Package": "cli",
       "Version": "3.3.0",

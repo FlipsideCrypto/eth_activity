@@ -66,8 +66,10 @@ shinyUI(fluidPage(
       class = 'chart-container',
       div(
         class = 'chart-block',
-        div(class = 'chart-title', span('Your ETH Activity')),
         div(class = 'chart',
+            conditionalPanel("input.submit > 0",
+                             uiOutput('title')
+                             ),
             fluidRow(
               column(3,
                      conditionalPanel("input.submit > 0",
@@ -81,6 +83,7 @@ shinyUI(fluidPage(
                      )
               )
             ),
+            br(),
             plotlyOutput("main_plot")
         )
       )
@@ -88,10 +91,14 @@ shinyUI(fluidPage(
     div(class = "about",
         h3("About"),
         br(),
-        p("Built w/ ❤️ by the team and community at Flipside Crypto."),
+        HTML(
+          paste0(
+            "Built w/ ❤️ by the team at Flipside Crypto. Powered by ",
+            "<u><a href = 'https://sdk.flipsidecrypto.xyz/shroomdk'>ShroomDK</a></u>"
+            )),
         p("Have a feature request, or want to build using Flipside's free data?"),
         HTML(
-          paste0("Join us in ","<u><a href = 'https://flipside.com/discord'>Discord</a><u>")
+          paste0("Join us in ","<u><a href = 'https://flipside.com/discord'>Discord</a></u>")
         )
     )
     

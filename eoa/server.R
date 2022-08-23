@@ -32,6 +32,23 @@ shinyServer(function(input, output, session) {
   })
   
 
+  output$title <- renderUI({
+    
+    da <- eoa_stats()[["Days Active"]]
+    
+    percent <- { 
+      round(
+        100*(1 - eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == da, "eoa_cumprop"]), 
+        2)
+    }
+    
+    tagList(
+      div(class = 'chart-title', span(
+        paste0("You are in the top ", percent, "% of ETH users for Days Active!")
+      )))
+    
+  })
+  
  output$compare <- renderUI({
    tagList(
      lapply(names(eoa_stats()), 

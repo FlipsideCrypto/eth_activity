@@ -76,7 +76,9 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
   
 }
 
-plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
+plot_eoa <- function(eoadh = eoa_daily_history, 
+                     user_bar = NULL, 
+                     title = "ETH Accounts by their Historic Days Active"){
 
   eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
     summarise(sum_eoa = sum(EOA_FREQ))
@@ -113,7 +115,7 @@ plot_eoa <- function(eoadh = eoa_daily_history, user_bar = NULL){
   
   
   eoa_plotly <- eoa_plotly %>% 
-    layout(title = "ETH Accounts by their Historic Days Active",
+    layout(title = title,
            font = list(
              family = "Inter",
              color = 'white'),

@@ -1,10 +1,11 @@
+
+library(shinyjs)
 library(ggplot2)
 library(dplyr)
 library(plotly)
 library(jsonlite)
 library(httr)
 library(shroomDK)
-library(shinyjs)
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
 

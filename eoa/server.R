@@ -63,8 +63,8 @@ shinyServer(function(input, output, session) {
    plot_()
   })
  
- output$heatmap <- renderPlotly({
-   plot_tx(results())
+ output$heatmap <- renderUI({
+   renderPlotly(plot_tx(results()))
  })
   
 })

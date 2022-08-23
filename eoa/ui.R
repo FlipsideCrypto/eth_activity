@@ -68,25 +68,24 @@ shinyUI(fluidPage(
         class = 'chart-block',
         div(class = 'chart-title', span('Your ETH Activity')),
         div(class = 'chart',
-              div(class = 'heat',
-              conditionalPanel("input.submit > 0",
-                                   uiOutput('heatmap')) 
-            ),
             fluidRow(
               column(3,
                      conditionalPanel("input.submit > 0",
                                       div(class = 'eoa-tbl',
                                           uiOutput('compare'))
+                     )),
+              column(9, 
+                     div(class = 'heat',
+                         conditionalPanel("input.submit > 0",
+                                          uiOutput('heatmap'))
                      )
-          ),
-          column(9,
-                   plotlyOutput("main_plot")
-                 )
+              )
+            ),
+            plotlyOutput("main_plot")
         )
-       )
       )
     )
-  
+    
 ) # end FluidPage
 ) # end shinyUI
 

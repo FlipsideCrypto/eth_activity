@@ -22,14 +22,17 @@ shinyServer(function(input, output, session) {
   
   eoa_stats <- reactive({
     
+    da <- length(unique(results()$date))
+    
     eoa_activity <- list(
-      "TX Count" = sum(results()$NUM_TX),
-      "Days Active" = length(unique(results()$date)),
+      "Transactions" = sum(results()$NUM_TX),
+      "Days Active" = da,
       "Activity Score" = {
+        
         paste0(
           100 * 
             round(
-              eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == length(unique(results()$date)), "eoa_cumprop"],
+              eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == da, "eoa_cumprop"],
               4)
         )
       }

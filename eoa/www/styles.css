@@ -3,6 +3,21 @@
 /*PUT CUSTOM CLASSES HERE*/
 /*******************/
 
+.about {
+  margin: auto;
+  width: 300px;
+}
+
+h3 { 
+  color: #03FFFF;
+  margin: auto;
+}
+
+.about { 
+  margin: center;
+  text-align: center;
+}
+
 .eoa-tbl {
   margin-top: 30%;
 }

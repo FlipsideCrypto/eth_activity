@@ -84,6 +84,15 @@ shinyUI(fluidPage(
             plotlyOutput("main_plot")
         )
       )
+    ),
+    div(class = "about",
+        h3("About"),
+        br(),
+        p("Built w/ ❤️ by the team and community at Flipside Crypto."),
+        p("Have a feature request, or want to build using Flipside's free data?"),
+        HTML(
+          paste0("Join us in ","<u><a href = 'https://flipside.com/discord'>Discord</a><u>")
+        )
     )
     
 ) # end FluidPage

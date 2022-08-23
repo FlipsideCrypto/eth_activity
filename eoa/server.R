@@ -27,15 +27,7 @@ shinyServer(function(input, output, session) {
     eoa_activity <- list(
       "Transactions" = sum(results()$NUM_TX),
       "Days Active" = da,
-      "Activity Score" = {
-        
-        paste0(
-          100 * 
-            round(
-              eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == da, "eoa_cumprop"],
-              4)
-        )
-      }
+      "Total Tx Fees" = paste0(round(sum(results()$FEES_PAID),2), ' Ξ')
     )
   })
   

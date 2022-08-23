@@ -35,7 +35,8 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
     query <- {
       "SELECT FROM_ADDRESS as eoa, 
        date_trunc('DAY', block_timestamp) as day_,
-  count(*) as num_tx
+  count(*) as num_tx,
+  sum(TX_FEE) as fees_paid
   FROM ethereum.core.fact_transactions
   WHERE FROM_ADDRESS = lower('_EOA_ADDRESS_')
   GROUP BY day_, eoa
@@ -166,7 +167,7 @@ plot_tx <- function(eoa_tx){
     p <- plot_ly(data = data)
     p <- add_heatmap(p = p, x = ~week,
                      y = ~day, 
-                     z = ~NUM_TX*10, # scale up for better coloring 
+                     z = ~NUM_TX*5, # scale up for better coloring 
                      text = paste0(
                        data$day,", ",
                        data$dates_in_year,
@@ -175,14 +176,14 @@ plot_tx <- function(eoa_tx){
                      ), 
                      colors = 'Blues',
                      zauto = FALSE, 
-                     zmax = 25, 
+                     zmax = 50, 
                      zmin = 0,
                      hoverinfo = 'text',
                      xgap = 3,
                      ygap = 3,
                      showscale = FALSE)
     
-    p %>% layout(title = "",
+    p %>% layout(title = "Year in Review",
                  font = list(
                    family = "Inter",
                    color = 'white'),

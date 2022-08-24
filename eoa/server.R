@@ -38,13 +38,13 @@ shinyServer(function(input, output, session) {
     
     percent <- { 
       round(
-        100*(1 - eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == da, "eoa_cumprop"]), 
+        100*(eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == da, "eoa_cumprop"]), 
         2)
     }
     
     tagList(
       div(class = 'chart-title', span(
-        paste0("You are in the top ", percent, "% of ETH users for Days Active!")
+        paste0("You're more active than ", percent, "% of ETH users!")
       )))
     
   })

@@ -98,7 +98,7 @@ shinyUI(fluidPage(
             )),
         p("Have a feature request, or want to build using Flipside's free data?"),
         HTML(
-          paste0("Join us in ","<u><a href = 'https://flipside.com/discord'>Discord</a></u>")
+          paste0("Join us in ","<u><a href = 'https://flipsidecrypto.com/discord'>Discord</a></u>")
         )
     )
     

@@ -50,15 +50,13 @@ shinyUI(fluidPage(
                           "Address",
                           textInput(inputId = "address", 
                                     label = NULL,
-                                    #value = default.address,
                                     placeholder = "enter a full address (non-ens)", 
                                     width = '400px'))
                ),
                column(3, class = 'light-right', id = "go-button",
                       div(style = "height: 60px; width: 100%", 
-                          "Fill",
-                          div(id = "click", "CLICK"))
-                      #actionButton("submit", label = "FILL"))
+                          "-",
+                          div(id = "click", "SEARCH"))
                ) # close column 3
       ), # close row
       

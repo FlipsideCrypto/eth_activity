@@ -103,6 +103,9 @@ plot_eoa <- function(eoadh = eoa_daily_history,
                 "\nAddresses: ", 
                 scales::label_comma(accuracy = 1)(sum_eoa)))
     
+    if(is.null(user_bar)){
+    urhere <- NULL  
+    } else { 
     urhere <- list(
       x = user_bar,
       y = eoadh$sum_eoa[eoadh$lab == "You"]/1000000 + 10,
@@ -111,6 +114,7 @@ plot_eoa <- function(eoadh = eoa_daily_history,
       yref = "y",
       showarrow = FALSE
     )
+      }
   
   eoa_plotly <- 
     eoa_plotly %>% 

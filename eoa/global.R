@@ -86,30 +86,6 @@ plot_eoa <- function(eoadh = eoa_daily_history,
   
   eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
     summarise(sum_eoa = sum(EOA_FREQ))
-  
-  # if(is.null(user_bar)){
-  #   
-  #   eoa_plotly <- eoadh %>% 
-  #     plot_ly(x = ~eoa_bucket,
-  #             y = ~sum_eoa/1e6,
-  #             color = I("#696286"),
-  #             type = "bar",
-  #             hoverinfo = 'text',
-  #             hovertext = ~paste0(
-  #               "Days Active: ", eoa_bucket,
-  #               "\nAddresses: ", 
-  #               scales::label_comma(accuracy = 1)(sum_eoa)))
-  #   
-  #   urhere <- list(
-  #     x = 0,
-  #     y = 0,
-  #     text = "",
-  #     xref = "x",
-  #     yref = "y",
-  #     showarrow = FALSE
-  #   )
-  #   
-  # } else { 
     
     eoadh$lab <- c("Others")
     eoadh$lab[eoadh$eoa_bucket == user_bar] <- "You"
@@ -135,8 +111,6 @@ plot_eoa <- function(eoadh = eoa_daily_history,
       yref = "y",
       showarrow = FALSE
     )
-  # }
-  
   
   eoa_plotly <- 
     eoa_plotly %>% 
@@ -198,9 +172,7 @@ plot_tx <- function(eoa_tx) {
                       levels = c("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"),
                       labels = c("Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"))
   
-  
-  #colfunc <- colorRampPalette(c("#C8B1F2", "#696286"))
-  colfunc <- colorRampPalette(c("#C8B1F2", "#4F4A59"))
+    colfunc <- colorRampPalette(c("#C8B1F2", "#4F4A59"))
   
   data[data$NUM_TX == 0,]$NUM_TX <- 0.01
   
@@ -223,7 +195,6 @@ plot_tx <- function(eoa_tx) {
                         color = "#423E75",
                         line = list(width = 0, color = "#423E75")
           ),
-          #name = ~address_name,
           text = paste0(
             data$day,", ",
             data$date,

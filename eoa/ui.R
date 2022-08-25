@@ -55,8 +55,8 @@ shinyUI(fluidPage(
                ),
                column(3, class = 'light-right', id = "go-button",
                       div(style = "height: 60px; width: 100%", 
-                          "-",
-                          div(id = "click", "SEARCH"))
+                          "Fill",
+                          div(id = "click", "CLICK"))
                ) # close column 3
       ), # close row
       

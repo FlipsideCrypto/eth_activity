@@ -4,104 +4,135 @@ source("global.R")
 # Define UI -------
 
 shinyUI(fluidPage(
-    title = 'ETH Activity',
-    useShinyjs(),
-    
-    tags$head(
-      tags$link(rel = 'stylesheet', type = 'text/css', href = 'styles.css'),
-      tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Roboto+Mono'),
-      tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Inter')
-    ),
-    tags$head(tags$script(src = 'rudderstack.js')),
-    tags$style(type='text/css',
-               '.shiny-output-error { visibility: hidden; }',
-               '.shiny-output-error:before { visibility: hidden; }'
-    ),
-    
-    withTags({
-      header(class='top-banner',
-             section(
-               a(class='fs-logo', href='https://www.flipsidecrypto.com', 
-                 'Powered by Flipside Crypto', onclick = 'rudderstack.track("ntr-click-flipside-icon")'),
-               section(class='socials',
-                       a(class='twitter', href='https://twitter.com/flipsidecrypto',
-                         'Twitter', onclick = 'rudderstack.track("ntr-click-twitter-icon")'),
-                       a(class='linkedin', href='https://www.linkedin.com/company/flipside-crypto',
-                         'LinkedIn', onclick = 'rudderstack.track("ntr-click-linkedin-icon")'),
-                       a(class='discord', href='https://flipsidecrypto.com/discord',
-                         'Discord', onclick = 'rudderstack.track("ntr-click-discord-icon")'),
-                       a(href='https://app.flipsidecrypto.com/auth/signup/', # redirects to xyz signup
-                         'Sign Up', onclick = 'rudderstack.track("ntr-click-signup-icon")')
-               )
+  title = 'Ethereum Dedication',
+  useShinyjs(),
+  
+  tags$head(
+    tags$link(rel = 'stylesheet', type = 'text/css', href = 'styles.css'),
+    tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Roboto+Mono'),
+    tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Inter'),
+    tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Architects+Daughter')
+  ),
+  tags$head(tags$script(src = 'rudderstack.js')),
+  tags$style(type='text/css',
+             '.shiny-output-error { visibility: hidden; }',
+             '.shiny-output-error:before { visibility: hidden; }'
+  ),
+  
+  withTags({
+    header(class='top-banner',
+           section(
+             a(class='fs-logo', href='https://www.flipsidecrypto.com', 
+               'Powered by Flipside Crypto', onclick = 'rudderstack.track("ntr-click-flipside-icon")'),
+             section(class='socials',
+                     a(class='twitter', href='https://twitter.com/flipsidecrypto',
+                       'Twitter', onclick = 'rudderstack.track("ntr-click-twitter-icon")'),
+                     a(class='linkedin', href='https://www.linkedin.com/company/flipside-crypto',
+                       'LinkedIn', onclick = 'rudderstack.track("ntr-click-linkedin-icon")'),
+                     a(class='discord', href='https://flipsidecrypto.com/discord',
+                       'Discord', onclick = 'rudderstack.track("ntr-click-discord-icon")'),
+                     a(href='https://app.flipsidecrypto.com/auth/signup/', # redirects to xyz signup
+                       'Sign Up', onclick = 'rudderstack.track("ntr-click-signup-icon")')
              )
-      )
-    }),
-    
-    # APP LABEL HERE -----------------------------------  
-    
-    withTags({
-      section(class='hero',
-              h1(
-                class='header', 
-                'ETH Activity', 
-              ),
-              p('Search your address to get stats on your activity'),
-      )
-    }),
-    
-    # APP START HERE -----------------------------------  
-   
-    div(class = 'chart-block',
-        fluidRow(
-                 column(10,
-                        textInput(inputId = "address", label = "",
-                                  placeholder = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-                                  width = '90%')),
-                 column(2, class = 'eoa-btn',
-                        actionButton("submit", label = "Search", width = '90%'))
-        )
-    ),
-    
-    div(
-      class = 'chart-container',
-      div(
-        class = 'chart-block',
-        div(class = 'chart',
-            conditionalPanel("input.submit > 0",
-                             uiOutput('title')
-                             ),
-            fluidRow(
-              column(3,
-                     conditionalPanel("input.submit > 0",
-                                      div(class = 'eoa-tbl',
-                                          uiOutput('compare'))
-                     )),
-              column(9, 
-                     div(class = 'heat',
-                         conditionalPanel("input.submit > 0",
-                                          uiOutput('heatmap'))
-                     )
-              )
-            ),
-            br(),
-            plotlyOutput("main_plot")
-        )
-      )
-    ),
-    div(class = "about",
-        h3("About"),
-        br(),
-        HTML(
-          paste0(
-            "Built w/ ❤️ by the team at Flipside Crypto. Powered by ",
-            "<u><a href = 'https://sdk.flipsidecrypto.xyz/shroomdk'>ShroomDK</a></u>"
-            )),
-        p("Have a feature request, or want to build using Flipside's free data?"),
-        HTML(
-          paste0("Join us in ","<u><a href = 'https://flipsidecrypto.com/discord'>Discord</a></u>")
-        )
+           )
     )
-    
+  }),
+  
+  div(class = "timecard-holder", 
+      fluidRow(class='solid',
+               div(class='title', 'Ethereum Dedication'),
+               div(class = "subtitle", 'Your Onchain Timecard'),
+      ),
+      br(),
+      fluidRow(class = "address-row",
+               column(9, class = 'light-left',
+                      div(style = "height: 60px", # sorry for the inline styling, it's just easier this way :crying:
+                          "Address",
+                          textInput(inputId = "address", 
+                                    label = NULL,
+                                    #value = default.address,
+                                    placeholder = "enter a full address (non-ens)", 
+                                    width = '400px'))
+               ),
+               column(3, class = 'light-right', id = "go-button",
+                      div(style = "height: 60px; width: 100%", 
+                          "Fill",
+                          div(id = "click", "CLICK"))
+                      #actionButton("submit", label = "FILL"))
+               ) # close column 3
+      ), # close row
+      
+      fluidRow(
+        column(4, class = 'light-left',
+               div(style = "height: 60px; width: 100%",
+                   "# Txn.", div(class = "show-result", textOutput("ntxn")))),
+        column(4, class = 'light-left',
+               div(style = "height: 60px; width: 100%",
+                   "Days Active", div(class = "show-result", textOutput("days")))),
+        column(4, class = 'light-left',
+               div(style = "height: 60px; width: 100%",
+                   "Fees Ξ", div(class = "show-result", textOutput("fees"))))
+      ),
+      
+      fluidRow(
+        column(12,class = "light-left",
+               div(style = "width: 100%",
+                   div("Daily Punchcard"), br(),
+                   plotlyOutput('heatmap', width = "100%", height = "300px")
+               ), br(),
+        )
+      ),
+      fluidRow(class='solid',
+               div(class = "subtitle", 'You vs. Everyone Else'),
+      ),
+      
+      fluidRow(
+        column(6, class = 'light-left',
+               div(style = "height: 60px; width: 100%",
+                   "Days Active: Chain Median", div(class = "show-result", textOutput("median_days")))),
+        column(6, class = 'light-left',
+               div(style = "height: 60px; width: 100%",
+                   "Your Percentile", div(class = "show-result", textOutput("percentile"))))
+      ),
+      
+      fluidRow(
+        column(12,class = "light-left",
+               div(style = "width: 100%",
+                   div("Active Days"),
+                   plotlyOutput('main_plot', width = "100%", height = "300px")
+               ), 
+               br()       
+        )
+      ),
+      
+      fluidRow(class='solid',
+               div(class = "subtitle", 'About this Timecard'),
+      ),
+      fluidRow(
+        column(6, class = 'light-left',
+               div(style = "height: 60px; width: 100%",
+                   HTML(
+                     paste0(
+                       "Built w/ ❤️ by the team at Flipside Crypto. Powered by ",
+                       "<u><a href = 'https://sdk.flipsidecrypto.xyz/shroomdk'>ShroomDK</a></u>"
+                     ))
+                   )),
+        column(6, class = 'light-right',
+               div(style = "height: 60px; width: 100%",
+                   p("Part 1 of our mission to clock you onchain. What do you want to know about yourself?"),
+                   ))
+      ),
+      fluidRow(
+        column(12, class = 'light-left',
+               div(style = "height: 60px; width: 100%, text-align: center",
+                   HTML(
+                     paste0("Join us in ","<u><a href = 'https://flipsidecrypto.com/discord'>Discord</a></u>")
+                   )             
+               ))
+      )
+      
+  ) # close timecard-holder div
+  
 ) # end FluidPage
 ) # end shinyUI
 

@@ -1,4 +1,3 @@
-
 library(shinyjs)
 library(ggplot2)
 library(dplyr)
@@ -8,6 +7,11 @@ library(httr)
 library(shroomDK)
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 api_key <- readLines("api_key.txt")
+
+
+#423E75 # dark purple
+#CECBF5 # light purple
+#0D0C1C # black background
 
 # EOA Daily History (query updates DAILY) ----
 
@@ -29,7 +33,7 @@ eoa_daily_history <- eoa_daily_history %>%
 # FUNCTIONS ----
 
 get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
- 
+  
   withProgress(message = "Querying...", detail = "", expr = {
     
     query <- {
@@ -47,7 +51,7 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
                   x = query, fixed = TRUE)
     
     incProgress(amount = 0.1,
-               detail = "Query Created")
+                detail = "Query Created")
     
     query_token <- create_query_token(query = query, 
                                       api_key = api_key, 
@@ -69,7 +73,7 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
     df <- clean_query(res)
     
     incProgress(0.5, 
-                 detail = "Done!")
+                detail = "Done!")
     
     return(df)
   })
@@ -78,157 +82,206 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
 
 plot_eoa <- function(eoadh = eoa_daily_history, 
                      user_bar = NULL, 
-                     title = "ETH Accounts by their Historic Days Active"){
-
+                     title = "") {
+  
   eoadh <- eoadh %>% group_by(eoa_bucket) %>% 
     summarise(sum_eoa = sum(EOA_FREQ))
   
-  if(is.null(user_bar)){
-    
-    eoa_plotly <- eoadh %>% plot_ly(x = ~eoa_bucket,
-                                    y = ~sum_eoa/1e6,
-                                    color = I("#1C6DB8"),
-                                    type = "bar",
-                                    hoverinfo = 'text',
-                                    hovertext = ~paste0(
-                                      "Days Active: ", eoa_bucket,
-                                      "\nAddresses: ", 
-                                      scales::label_comma(accuracy = 1)(sum_eoa)))
-    
-  } else { 
+  # if(is.null(user_bar)){
+  #   
+  #   eoa_plotly <- eoadh %>% 
+  #     plot_ly(x = ~eoa_bucket,
+  #             y = ~sum_eoa/1e6,
+  #             color = I("#696286"),
+  #             type = "bar",
+  #             hoverinfo = 'text',
+  #             hovertext = ~paste0(
+  #               "Days Active: ", eoa_bucket,
+  #               "\nAddresses: ", 
+  #               scales::label_comma(accuracy = 1)(sum_eoa)))
+  #   
+  #   urhere <- list(
+  #     x = 0,
+  #     y = 0,
+  #     text = "",
+  #     xref = "x",
+  #     yref = "y",
+  #     showarrow = FALSE
+  #   )
+  #   
+  # } else { 
     
     eoadh$lab <- c("Others")
     eoadh$lab[eoadh$eoa_bucket == user_bar] <- "You"
     eoadh$lab <- as.factor(eoadh$lab)
     
-    eoa_plotly <- eoadh %>% plot_ly(x = ~eoa_bucket,
-                                    y = ~sum_eoa/1e6,
-                                    type = 'bar',
-                                    color = ~lab,
-                                    colors = c("#1C6DB8","#d99d45"),
-                                    hoverinfo = 'text',
-                                    hovertext = ~paste0(
-                                      "Days Active: ", eoa_bucket,
-                                      "\nAddresses: ", 
-                                      scales::label_comma(accuracy = 1)(sum_eoa)))
-  }
+    eoa_plotly <- eoadh %>% 
+      plot_ly(x = ~eoa_bucket,
+              y = ~sum_eoa/1e6,
+              type = 'bar',
+              color = ~lab,
+              colors = rev(c("#696286","#9288BA")),
+              hoverinfo = 'text',
+              hovertext = ~paste0(
+                "Days Active: ", eoa_bucket,
+                "\nAddresses: ", 
+                scales::label_comma(accuracy = 1)(sum_eoa)))
+    
+    urhere <- list(
+      x = user_bar,
+      y = eoadh$sum_eoa[eoadh$lab == "You"]/1000000 + 10,
+      text = "You\n↓",
+      xref = "x",
+      yref = "y",
+      showarrow = FALSE
+    )
+  # }
   
   
-  eoa_plotly <- eoa_plotly %>% 
-    layout(title = title,
+  eoa_plotly <- 
+    eoa_plotly %>% 
+    layout(annotations = urhere,
+           title = title,
            font = list(
-             family = "Inter",
-             color = 'white'),
+             family = "Roboto Mono",
+             color = '#423E75'),
+           showlegend = FALSE,
+           margin = list(l=35, r=0, b=35, t=0, autoexpand = FALSE),
            yaxis = list(title = "# Addresses (Millions)", 
                         showgrid = FALSE,
-                        color = "#FFF"), 
+                        color = "#423E75"), 
            xaxis = list(title = "Days Active",
                         showticklabels = TRUE,
-                        color = "#FFF"),
+                        color = "#423E75"),
            plot_bgcolor = "transparent", 
            paper_bgcolor = "transparent",
-           legend = list(font = list(color = '#FFFFFF')),
            hovermode = 'x') %>%
     plotly::config(scrollZoom = FALSE,
-           displayModeBar = FALSE, 
-           displaylogo = FALSE)
+                   displayModeBar = FALSE, 
+                   displaylogo = FALSE)
   
   return(eoa_plotly)
   
 }
 
-plot_tx <- function(eoa_tx){
-    
-    maxdate <- Sys.Date()
-    mindate <- Sys.Date() - 391
-    
-    d <- data.frame(
-      dates_in_year = seq.Date(mindate, maxdate, by = 'day')
+plot_tx <- function(eoa_tx) {
+  
+  maxdate <- Sys.Date()
+  mindate <- Sys.Date() - 391
+  
+  d <- data.frame(
+    date = seq.Date(mindate, maxdate, by = 'day')
+  )
+  
+  d$month <- format(d$date, '%b')
+  d$day <- weekdays(d$date)
+  
+  # start on Monday
+  d <- d[which(d$day == "Monday")[1]:length(d$day), ]
+  d$week <- ceiling(nrow(d)/7) # fill last week number *
+  # infill previous weeks (1,1,1,1,1,1,1,2,2,2,2,2,2,2,.... N,N,N,N,N,N,N,*)
+  fillweek = floor(nrow(d)/7)*7
+  d$week[1:fillweek] <- unlist(lapply(1:(nrow(d)/7), replicate, n = 7))
+  
+  
+  data <- merge(d, eoa_tx, by = "date", all.x = TRUE)
+  data <- data[, c("date","week","month", "day", "NUM_TX")]
+  data$NUM_TX[is.na(data$NUM_TX)] <- 0
+  
+  monthlabel = data %>% 
+    group_by(month) %>% 
+    summarise(w1 = first(week)) %>% 
+    dplyr::arrange(w1)
+  
+  data$day <- toupper(substr(data$day, 1, 3))
+  data$day <- ordered(data$day, 
+                      levels = c("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"),
+                      labels = c("Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"))
+  
+  
+  #colfunc <- colorRampPalette(c("#C8B1F2", "#696286"))
+  colfunc <- colorRampPalette(c("#C8B1F2", "#4F4A59"))
+  
+  data[data$NUM_TX == 0,]$NUM_TX <- 0.01
+  
+  hline <- function(y = 0, color = "grey") {
+    list(
+      type = "line",
+      x0 = 0,
+      x1 = 1,
+      xref = "paper",
+      y0 = y,
+      y1 = y,
+      line = list(color = color, width = 0.5)
     )
-    
-    d$month <- format(d$dates_in_year, '%b')
-    d$day <- weekdays(d$dates_in_year)
-    
-    # start on Monday
-    d <- d[which(d$day == "Monday")[1]:length(d$day), ]
-    d$week <- ceiling(nrow(d)/7) # fill last week number *
-    # infill previous weeks (1,1,1,1,1,1,1,2,2,2,2,2,2,2,.... N,N,N,N,N,N,N,*)
-    fillweek = floor(nrow(d)/7)*7
-    d$week[1:fillweek] <- unlist(lapply(1:(nrow(d)/7), replicate, n = 7))
-    
-    
-    data <- merge(d, eoa_tx, by.x = "dates_in_year", by.y = "date", all.x = TRUE)
-    data <- data[, c("dates_in_year","week","month", "day", "NUM_TX")]
-    data$NUM_TX[is.na(data$NUM_TX)] <- 0
-    
-    monthlabel = data %>% 
-      group_by(month) %>% 
-      summarise(w1 = first(week)) %>% 
-      dplyr::arrange(w1)
-    
-    p <- plot_ly(data = data)
-    p <- add_heatmap(p = p, x = ~week,
-                     y = ~day, 
-                     z = ~NUM_TX*5, # scale up for better coloring 
-                     text = paste0(
-                       data$day,", ",
-                       data$dates_in_year,
-                       "\nTransactions:",
-                       data$NUM_TX
-                     ), 
-                     colors = 'Blues',
-                     zauto = FALSE, 
-                     zmax = 50, 
-                     zmin = 0,
-                     hoverinfo = 'text',
-                     xgap = 3,
-                     ygap = 3,
-                     showscale = FALSE)
-    
-    p %>% layout(title = "Year in Review",
-                 font = list(
-                   family = "Inter",
-                   color = 'white'),
-                 plot_bgcolor = "transparent", 
-                 paper_bgcolor = "transparent",
-                 yaxis=list(
-                   showline = FALSE,
-                   color = "#FFF",
-                   showgrid = FALSE,
-                   zeroline = FALSE,
-                   tickmode="array",
-                   ticktext=data$day[1:7],
-                   tickvals=c(0,1,2,3,4,5,6),
-                   title="",
-                   autorange = 'reversed'
-                 ),
-                 xaxis= list(
-                   showline = FALSE,
-                   showgrid = FALSE,
-                   zeroline = FALSE,
-                   color = "#FFF",
-                   ticktext = c(monthlabel$month,monthlabel$month[1]),
-                   tickvals = c(monthlabel$w1, max(monthlabel$w1)+4),
-                   title = ""
-                 )) %>%
-      plotly::config(scrollZoom = FALSE,
-                     displayModeBar = FALSE, 
-                     displaylogo = FALSE)
+  }
+  
+  plot_ly(data,
+          x = ~week, 
+          y = ~day,
+          marker = list(size = ~NUM_TX*5, 
+                        color = "#423E75",
+                        line = list(width = 0, color = "#423E75")
+          ),
+          #name = ~address_name,
+          text = paste0(
+            data$day,", ",
+            data$date,
+            "\nTransactions:",
+            round(data$NUM_TX)
+          ),
+          hoverinfo = 'text', 
+          type = 'scatter', mode = "markers") %>%
+    layout(
+      shapes = list(hline(-0.5), hline(0.5), hline(1.5), hline(2.5), hline(3.5), hline(4.5), hline(5.5), hline(6.5)),
+      font = list(
+        family = "Roboto Mono",
+        color = "#423E75"),
+      plot_bgcolor = "transparent", 
+      paper_bgcolor = "transparent",
+      margin = list(l=20, r=0, b=20, t=0, autoexpand = FALSE),
+      yaxis=list(
+        showline = FALSE,
+        ticklen = 0,
+        tickwidth = 0,
+        color = "#423E75",
+        showgrid = FALSE,
+        zeroline = FALSE,
+        tickmode="array",
+        #tickvals=c(0,1,2,3,4,5,6),
+        title="",
+        autorange = 'reversed',
+        tickangle = 270
+      ),
+      xaxis= list(
+        showline = FALSE,
+        showgrid = FALSE,
+        zeroline = FALSE,
+        color = "#423E75",
+        ticklen = 0,
+        tickwidth = 0,
+        ticktext = c(monthlabel$month,monthlabel$month[1]),
+        tickvals = c(monthlabel$w1, max(monthlabel$w1)+4),
+        title = ""
+      )) %>%
+    plotly::config(scrollZoom = FALSE,
+                   displayModeBar = FALSE, 
+                   displaylogo = FALSE)
+  
 }
 
 card_eoa <- function(card_value, card_label){ 
-    # Creates a card using html
-HTML(
-  paste0(
-  '<div class="card">
+  # Creates a card using html
+  HTML(
+    paste0(
+      '<div class="card">
     <div class="card-body">
       <p class="card-value">',
-  card_value,
-  '</p><p class="card-label">',
-  card_label,
-  '</p></div></div>'
+      card_value,
+      '</p><p class="card-label">',
+      card_label,
+      '</p></div></div>'
+    )
   )
-)
   
-  }
-  
+}

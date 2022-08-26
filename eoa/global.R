@@ -192,19 +192,21 @@ plot_tx <- function(eoa_tx) {
     )
   }
   
-  p <- plot_ly(data)
-  
-  p <- add_heatmap(p,
+  plot_ly(data,
           x = ~week, 
           y = ~day,
-          z = ~NUM_TX*5,
+          marker = list(size = ~NUM_TX*5, 
+                        color = "#423E75",
+                        line = list(width = 0, color = "#423E75")
+          ),
           text = paste0(
             data$day,", ",
             data$date,
             "\nTransactions:",
             round(data$NUM_TX)
           ),
-          hoverinfo = 'text') %>%
+          hoverinfo = 'text', 
+          type = 'scatter', mode = "markers") %>%
     layout(
       shapes = list(hline(-0.5), hline(0.5), hline(1.5), hline(2.5), hline(3.5), hline(4.5), hline(5.5), hline(6.5)),
       font = list(

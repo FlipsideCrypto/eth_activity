@@ -15,7 +15,6 @@ shinyServer(function(input, output, session) {
                          api_key = readLines("api_key.txt"),
                          ttl = 0)
       x$date <- as.Date(x$DAY_)
-      xx <<- x
       results$table <- x
     }
     

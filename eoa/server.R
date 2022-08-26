@@ -15,10 +15,12 @@ shinyServer(function(input, output, session) {
                          api_key = readLines("api_key.txt"),
                          ttl = 0)
       x$date <- as.Date(x$DAY_)
+      xx <<- x
       results$table <- x
     }
     
   })
+  
   
   eoa_stats <- reactive({
     eoa_activity <- list(
@@ -33,23 +35,27 @@ shinyServer(function(input, output, session) {
   output$fees <- renderText(ifelse(eoa_stats()$fees != '0 Ξ', eoa_stats()$fees, ""))
   
   
-  output$median_days <- renderText(ifelse(eoa_stats()$txn > 0, "<1 day", ""))
+  output$favorite_days <- renderText({
+    ifelse(eoa_stats()$txn > 0,
+           names(which.max(table(rep(weekdays(results$table$date), results$table$NUM_TX)))),
+           "")
+    })
   
   output$percentile <- renderText({
-    round(
+    paste0(round(
       100*(eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == eoa_stats()$days, "eoa_cumprop"]), 
-      2)
+      2),"%")
   })
  
   output$main_plot <- renderPlotly({
    
-    txn = as.numeric(eoa_stats()$txn) 
+    days = as.numeric(eoa_stats()$days) 
     
-    x = cut(txn,
+    x = cut(days,
             breaks = c(0, 1,10,100,1000, Inf),
             labels = c("1","2-10","11-100","101-1000","1001+"))
     
-    if(txn == 0){
+    if(days == 0){
     plot_eoa(eoadh = eoa_daily_history, user_bar = NULL)
     } else {
       plot_eoa(eoadh = eoa_daily_history, user_bar = x)

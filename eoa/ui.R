@@ -4,7 +4,7 @@ source("global.R")
 # Define UI -------
 
 shinyUI(fluidPage(
-  title = 'Ethereum Dedication',
+  title = 'Ethereum Activity',
   useShinyjs(),
   
   tags$head(
@@ -40,7 +40,7 @@ shinyUI(fluidPage(
   
   div(class = "timecard-holder", 
       fluidRow(class='solid',
-               div(class='title', 'Ethereum Dedication'),
+               div(class='title', 'Ethereum Activity'),
                div(class = "subtitle", 'Your Onchain Timecard'),
       ),
       br(),
@@ -87,10 +87,10 @@ shinyUI(fluidPage(
       fluidRow(
         column(6, class = 'light-left',
                div(style = "height: 60px; width: 100%",
-                   "Days Active: Chain Median", div(class = "show-result", textOutput("median_days")))),
+                   "Favorite Day", div(class = "show-result", textOutput("favorite_days")))),
         column(6, class = 'light-left',
                div(style = "height: 60px; width: 100%",
-                   "Your Percentile", div(class = "show-result", textOutput("percentile"))))
+                   "More Active than", div(class = "show-result", textOutput("percentile"))))
       ),
       
       fluidRow(
@@ -107,7 +107,7 @@ shinyUI(fluidPage(
                div(class = "subtitle", 'About this Timecard'),
       ),
       fluidRow(
-        column(6, class = 'light-left',
+        column(6, class = 'light-left foot',
                div(style = "height: 60px; width: 100%",
                    HTML(
                      paste0(
@@ -115,16 +115,19 @@ shinyUI(fluidPage(
                        "<u><a href = 'https://sdk.flipsidecrypto.xyz/shroomdk'>ShroomDK</a></u>"
                      ))
                    )),
-        column(6, class = 'light-right',
+        column(6, class = 'light-right foot',
                div(style = "height: 60px; width: 100%",
                    p("Part 1 of our mission to clock you onchain. What do you want to know about yourself?"),
                    ))
       ),
       fluidRow(
-        column(12, class = 'light-left',
+        column(12, class = 'light-left foot',
                div(style = "height: 60px; width: 100%, text-align: center",
                    HTML(
-                     paste0("Join us in ","<u><a href = 'https://flipsidecrypto.com/discord'>Discord</a></u>")
+                     paste0("Join us in ",
+                            "<u><a href = 'https://flipsidecrypto.com/discord'>Discord</a></u>",
+                            br(),"Code is open source on ",
+                            "<u><a href = 'https://github.com/FlipsideCrypto/eth_activity'>Github</a></u>")
                    )             
                ))
       )

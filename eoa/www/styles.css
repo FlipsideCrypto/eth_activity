@@ -89,6 +89,10 @@
   background: linear-gradient(180deg, rgba(60,47,110,1) 0%, rgba(13,12,28,1) 67%);
 }
 
+.foot {
+  text-align: center;
+}
+
 
 /*******************/
 /*     GENERAL Page     */

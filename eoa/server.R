@@ -41,9 +41,13 @@ shinyServer(function(input, output, session) {
     })
   
   output$percentile <- renderText({
+    if(is.null(results$table)){
+      ""
+    } else {
     paste0(round(
       100*(eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == eoa_stats()$days, "eoa_cumprop"]), 
       2),"%")
+    }
   })
  
   output$main_plot <- renderPlotly({
@@ -54,10 +58,14 @@ shinyServer(function(input, output, session) {
             breaks = c(0, 1,10,100,1000, Inf),
             labels = c("1","2-10","11-100","101-1000","1001+"))
     
-    if(days == 0){
-    plot_eoa(eoadh = eoa_daily_history, user_bar = NULL)
+    if(is.null(results$table)){
+      NULL
     } else {
-      plot_eoa(eoadh = eoa_daily_history, user_bar = x)
+      if(days == 0){
+        plot_eoa(eoadh = eoa_daily_history, user_bar = NULL)
+      } else {
+        plot_eoa(eoadh = eoa_daily_history, user_bar = x)
+      }
     }
     
   })

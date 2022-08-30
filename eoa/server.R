@@ -8,7 +8,7 @@ shinyServer(function(input, output, session) {
   onclick(id = "go-button", expr = {
     
     if(nchar(input$address) != 42 | !grepl("^0x", input$address)){
-      stop("Double check address is a valid ETH address (not ENS)")
+      warning("Double check address is a valid ETH address (not ENS)")
       
     } else {
       x <- get_tx_by_day(eoa_address = input$address,

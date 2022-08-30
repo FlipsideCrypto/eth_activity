@@ -1,4 +1,5 @@
 library(shiny)
+library(shinyscreenshot)
 source("global.R")
 
 # Define UI -------
@@ -38,7 +39,7 @@ shinyUI(fluidPage(
     )
   }),
   
-  div(class = "timecard-holder", 
+  div(class = "timecard-holder", id = 'tch', 
       fluidRow(class='solid',
                div(class='title', 'Ethereum Activity'),
                div(class = "subtitle", 'Your Onchain Timecard'),
@@ -130,6 +131,11 @@ shinyUI(fluidPage(
                             "<u><a href = 'https://github.com/FlipsideCrypto/eth_activity'>Github</a></u>")
                    )             
                ))
+      ),
+      fluidRow(
+        div(class = 'about',
+        screenshotButton(label = "Print your card!", selector = '#tch', filename = 'mytimecard')
+        )
       )
       
   ) # close timecard-holder div

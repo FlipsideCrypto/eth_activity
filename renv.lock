@@ -689,6 +689,19 @@
         "shiny"
       ]
     },
+    "shinyscreenshot": {
+      "Package": "shinyscreenshot",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "cfd65407fe3fe158131c380bf56c7c93",
+      "Requirements": [
+        "base64enc",
+        "jsonlite",
+        "shiny",
+        "uuid"
+      ]
+    },
     "shroomDK": {
       "Package": "shroomDK",
       "Version": "0.1.0",
@@ -778,6 +791,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "c9c462b759a5cc844ae25b5942654d13",
+      "Requirements": []
+    },
+    "uuid": {
+      "Package": "uuid",
+      "Version": "1.1-0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f1cb46c157d080b729159d407be83496",
       "Requirements": []
     },
     "vctrs": {

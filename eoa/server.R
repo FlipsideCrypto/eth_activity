@@ -8,7 +8,11 @@ shinyServer(function(input, output, session) {
   onclick(id = "go-button", expr = {
     
     if(nchar(input$address) != 42 | !grepl("^0x", input$address)){
-      showNotification("Addresses must be 42 chars long and start with 0x")
+      #showNotification("Addresses must be 42 chars long and start with 0x. Like this: 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+      showModal(modalDialog(
+        title = "on no! error!",
+        HTML("Addresses must be 42 chars long and start with 0x<br>Like this: 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+      ))
       warning("Double check address is a valid ETH address (not ENS)")
       
     } else {

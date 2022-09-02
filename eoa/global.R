@@ -195,7 +195,7 @@ plot_tx <- function(eoa_tx) {
   plot_ly(data,
           x = ~week, 
           y = ~day,
-          marker = list(size = ~NUM_TX*5, 
+          marker = list(size = ~log(NUM_TX + 1,base = 1.15), 
                         color = "#423E75",
                         line = list(width = 0, color = "#423E75")
           ),

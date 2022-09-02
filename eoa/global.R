@@ -17,15 +17,17 @@ api_key <- readLines("api_key.txt")
 
 eoa_daily_history <- fromJSON(
   paste0("https://node-api.flipsidecrypto.com/api/v2/queries/",
-         "49534ded-30f3-450a-8d31-558cb159966e/data/latest")
+         "e90160dc-765a-45f7-8a28-d2258c4127e9/data/latest")
+  #"49534ded-30f3-450a-8d31-558cb159966e/data/latest"
+         
 )
 
-
 eoa_daily_history$eoa_bucket <- cut(eoa_daily_history$UNIQUE_DAYS,
-                                    breaks = c(0, 1,10,100,1000, Inf),
-                                    labels = c("1","2-10","11-100","101-1000","1001+"))
+                                    breaks = c(0, 1,3,10,50,100,300, Inf),
+                                    labels = c("1","</= 3","4-10","11-50","51-100","101-300","301 +"))
 
 eoa_daily_history <- eoa_daily_history %>% 
+  subset(UNIQUE_DAYS > 1) %>%
   mutate(eoa_proportion = EOA_FREQ/sum(EOA_FREQ),
          eoa_cumulative = cumsum(EOA_FREQ),
          eoa_cumprop = cumsum(eoa_proportion))

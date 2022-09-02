@@ -62,8 +62,8 @@ shinyServer(function(input, output, session) {
     days = as.numeric(eoa_stats()$days) 
     
     x = cut(days,
-            breaks = c(0, 1,10,100,1000, Inf),
-            labels = c("1","2-10","11-100","101-1000","1001+"))
+            breaks = c(0, 1,3,10,50,100,300, Inf),
+            labels = c("1","</= 3","4-10","11-50","51-100","101-300","301 +"))
     
     if(is.null(results$table)){
       NULL

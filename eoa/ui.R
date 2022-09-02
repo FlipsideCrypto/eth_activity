@@ -102,7 +102,7 @@ shinyUI(fluidPage(
         column(12, class = "light",
                style = "border-width: 0;",
                div(style = "width: 100%",
-                   div("Active Days"),
+                   div("Active Days (Based on last Year)"),
                    plotlyOutput('main_plot', width = "100%", height = "300px")
                ), 
                br()       

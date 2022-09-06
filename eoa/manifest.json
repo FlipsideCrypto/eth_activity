@@ -2072,7 +2072,7 @@
       "GithubRepo": "sdk",
       "GithubUsername": "FlipsideCrypto",
       "GithubRef": "HEAD",
-      "GithubSha1": "c5dd70f702d57374f294d7107109ca1819dca863",
+      "GithubSha1": "eabc21938a367759a603e049394b0f0b3c4a25c7",
       "GithubSubdir": "r/shroomDK",
       "description": {
         "Package": "shroomDK",
@@ -2091,16 +2091,16 @@
         "RemoteRepo": "sdk",
         "RemoteUsername": "FlipsideCrypto",
         "RemoteRef": "HEAD",
-        "RemoteSha": "c5dd70f702d57374f294d7107109ca1819dca863",
+        "RemoteSha": "eabc21938a367759a603e049394b0f0b3c4a25c7",
         "RemoteSubdir": "r/shroomDK",
         "GithubRepo": "sdk",
         "GithubUsername": "FlipsideCrypto",
         "GithubRef": "HEAD",
-        "GithubSHA1": "c5dd70f702d57374f294d7107109ca1819dca863",
+        "GithubSHA1": "eabc21938a367759a603e049394b0f0b3c4a25c7",
         "GithubSubdir": "r/shroomDK",
         "NeedsCompilation": "no",
-        "Packaged": "2022-08-01 16:27:25 UTC; crmer",
-        "Built": "R 4.2.1; ; 2022-08-01 16:27:25 UTC; windows"
+        "Packaged": "2022-09-06 16:18:27 UTC; crmer",
+        "Built": "R 4.2.1; ; 2022-09-06 16:18:27 UTC; windows"
       }
     },
     "sourcetools": {
@@ -2586,10 +2586,10 @@
       "checksum": "bb61aef15d01a10e5f3ea4544f325e34"
     },
     "global.R": {
-      "checksum": "632a9c038d38ff4debe56d19abd0c3b0"
+      "checksum": "9d725669d9aa4df635a568fc9eeaf3e3"
     },
     "server.R": {
-      "checksum": "f0e1d9553e765042fc959e31a1b5435e"
+      "checksum": "1597e11722060abdc350d8557dd0bf4b"
     },
     "ui.R": {
       "checksum": "2d6dfd072b0be1bf3b49a029af3ea788"

@@ -23,11 +23,6 @@ shinyServer(function(input, output, session) {
       x$date <- as.Date(x$DAY_)
       results$table <- x
     }
-    
-  })
-  
-  observeEvent(input$test, {
-  updateTextInput(session, 'address', label = Sys.getenv('api_key'))
   })
   
   eoa_stats <- reactive({

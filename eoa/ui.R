@@ -51,7 +51,8 @@ shinyUI(fluidPage(
                           textInput(inputId = "address", 
                                     label = NULL,
                                     placeholder = "enter a full address (non-ens)", 
-                                    width = '400px'))
+                                    width = '400px')),
+                      actionButton('test',"test")
                ),
                column(3, class = 'light', id = "go-button", 
                       style = "border-width: 1px 0 1px 0;",

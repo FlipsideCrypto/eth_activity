@@ -1,6 +1,5 @@
 library(shiny)
 source("global.R")
-api_key <- api_key
 # Define server logic 
 
 shinyServer(function(input, output, session) {
@@ -27,8 +26,9 @@ shinyServer(function(input, output, session) {
     
   })
   
-  
-  
+  observeEvent(input$test, {
+  updateTextInput(session, 'address', label = paste0(ls('.GlobalEnv'), collapse = ''))
+  })
   
   eoa_stats <- reactive({
     eoa_activity <- list(

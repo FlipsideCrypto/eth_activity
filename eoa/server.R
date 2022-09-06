@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
       
     } else {
       x <- get_tx_by_day(eoa_address = input$address,
-                         api_key = readLines("api_key.txt"),
+                         api_key = api_key,
                          ttl = 0)
       x$date <- as.Date(x$DAY_)
       results$table <- x

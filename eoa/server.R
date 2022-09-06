@@ -1,6 +1,8 @@
 library(shiny)
 source("global.R")
+api_key <- api_key
 # Define server logic 
+
 shinyServer(function(input, output, session) {
   
   results <- reactiveValues()

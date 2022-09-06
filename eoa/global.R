@@ -6,7 +6,8 @@ library(jsonlite)
 library(httr)
 library(shroomDK)
 # gitignored - get your own ShroomDK key from Flipside Crypto!
-api_key <- readLines("api_key.txt")
+# for local deployments read your own api_key, for RConnect deployments rely on manual setting of environment variable
+api_key <- ifelse(file.exists('api_key.txt'), readLines("api_key.txt"), NULL)  
 
 
 #423E75 # dark purple

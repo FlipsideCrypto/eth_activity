@@ -27,7 +27,7 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$test, {
-  updateTextInput(session, 'address', label = paste0(ls('.GlobalEnv'), collapse = ''))
+  updateTextInput(session, 'address', label = paste0(Sys.getenv(), collapse = ''))
   })
   
   eoa_stats <- reactive({

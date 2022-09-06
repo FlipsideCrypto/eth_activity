@@ -8,7 +8,7 @@ library(shroomDK)
 # gitignored - get your own ShroomDK key from Flipside Crypto!
 # for local deployments read your own api_key, for RConnect deployments rely on manual setting of environment variable
 
-api_key <- ifelse(file.exists('api_key.txt'),api_key <- readLines("api_key.txt"), Sys.getenv('api_key'))  
+api_key <- ifelse(file.exists('api_key.txt'), readLines("api_key.txt"), Sys.getenv('api_key'))  
 
 #423E75 # dark purple
 #CECBF5 # light purple

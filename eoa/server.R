@@ -17,12 +17,22 @@ shinyServer(function(input, output, session) {
       warning("Double check address is a valid ETH address (not ENS)")
       
     } else {
+      
+      tryCatch(expr = {
       x <- get_tx_by_day(eoa_address = input$address,
                          api_key = api_key,
                          ttl = 0)
+      }, error = function(e){
+        showModal(modalDialog(
+          title = "on no! error!",
+          HTML("This address has 0 tx. <br> Reminder: Contracts cannot initiate transactions!")))
+        Sys.sleep(2)
+        session$reload()
+      })
+      
       x$date <- as.Date(x$DAY_)
       results$table <- x
-    }
+        }
   })
   
   eoa_stats <- reactive({

@@ -62,24 +62,11 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
     incProgress(amount = 0.1,
                 detail = "Query Created")
     
-    query_token <- create_query_token(query = query, 
-                                      api_key = api_key, 
-                                      ttl = ttl,
-                                      cache = FALSE)
-    incProgress(amount = 0.2,
+   
+    incProgress(amount = 0.4,
                 detail = "Calculating...")
     
-    res <- get_query_from_token(query_token$token, 
-                                api_key = api_key)
-    
-    if(length(res$results) == 0){
-      stop("Double check that address is typed correctly, no transactions found.")
-    }
-    
-    incProgress(amount = 0.2, 
-                detail = "Cleaning Result...")
-    
-    df <- clean_query(res)
+    df <- shroomDK::auto_paginate_query(query, api_key)
     
     incProgress(0.5, 
                 detail = "Done!")

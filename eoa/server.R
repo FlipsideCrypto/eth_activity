@@ -19,9 +19,23 @@ shinyServer(function(input, output, session) {
     } else {
       
       tryCatch(expr = {
-      x <- get_tx_by_day(eoa_address = input$address,
-                         api_key = api_key,
-                         ttl = 0)
+        
+        withProgress(message = "Querying...", detail = "", expr = {
+          
+          incProgress(amount = 0.1,
+                      detail = "Inputs read...")
+          
+          incProgress(amount = 0.4,
+                      detail = "Calculating...")
+          
+          x <- get_tx_by_day(eoa_address = input$address,
+                             api_key = api_key,
+                             ttl = 0)
+          
+          incProgress(0.5, 
+                      detail = "Done!")
+        })
+        
       }, error = function(e){
         showModal(modalDialog(
           title = "on no! error!",
@@ -30,9 +44,8 @@ shinyServer(function(input, output, session) {
         session$reload()
       })
       
-      x$date <- as.Date(x$DAY_)
       results$table <- x
-        }
+    }
   })
   
   eoa_stats <- reactive({
@@ -58,9 +71,17 @@ shinyServer(function(input, output, session) {
     if(is.null(results$table)){
       ""
     } else {
-    paste0(round(
-      100*(eoa_daily_history[eoa_daily_history$UNIQUE_DAYS == eoa_stats()$days, "eoa_cumprop"]), 
-      2),"%")
+      total_eoa <- sum(eoa_daily_history$EOA_FREQ)
+      user_rank <- total_eoa - eoa_daily_history[
+        eoa_daily_history$UNIQUE_DAYS == eoa_stats()$days, 
+        "eoa_cumulative"]
+      
+      rnk <- cut(user_rank,
+                 breaks = c(0,1e3,1e4,1e5,250000,1e6,5e6,1e7,Inf),
+                 labels = c("Top 1000!","Top 10K","Top 100,000","Top 250,000",
+                            "Top 1 Million","Top 5 Million","Top 10 Million","Not Ranked"))
+      paste0(rnk)
+      
     }
   })
  
@@ -69,8 +90,8 @@ shinyServer(function(input, output, session) {
     days = as.numeric(eoa_stats()$days) 
     
     x = cut(days,
-            breaks = c(0,1,3,10,50,100,300,1000,Inf),
-            labels = c("1","</= 3","4-10","11-50","51-100","101-300","301-1000","1001 +"))
+            breaks = c(0,1,10,50,100,250,1000,Inf),
+            labels = c("1","2-10","11-50","51-100","101-250","251-1000","1001+"))
     
     if(is.null(results$table)){
       NULL

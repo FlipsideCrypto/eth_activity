@@ -23,19 +23,14 @@ api_key <- ifelse(file.exists('api_key.txt'),
 eoa_daily_history <- fromJSON(
   paste0("https://node-api.flipsidecrypto.com/api/v2/queries/",
          "49534ded-30f3-450a-8d31-558cb159966e/data/latest")
-         #"e90160dc-765a-45f7-8a28-d2258c4127e9/data/latest") -- last 391 day version
 )
 
 eoa_daily_history$eoa_bucket <- cut(eoa_daily_history$UNIQUE_DAYS,
-                                    breaks = c(0,1,3,10,50,100,300,1000,Inf),
-                                    labels = c("1","</= 3","4-10","11-50","51-100","101-300","301-1000","1001 +"))
+                                    breaks = c(0,1,10,50,100,250,1000,Inf),
+                                    labels = c("1","2-10","11-50","51-100","101-250","251-1000","1001+"))
 
-# for last 391 day version
-#breaks = c(0, 1,3,10,50,100,300, Inf),
-#labels = c("1","</= 3","4-10","11-50","51-100","101-300","301 +")
 
-eoa_daily_history <- eoa_daily_history %>% 
-  subset(UNIQUE_DAYS > 1) %>%
+eoa_daily_history <- eoa_daily_history %>%
   mutate(eoa_proportion = EOA_FREQ/sum(EOA_FREQ),
          eoa_cumulative = cumsum(EOA_FREQ),
          eoa_cumprop = cumsum(eoa_proportion))
@@ -44,8 +39,6 @@ eoa_daily_history <- eoa_daily_history %>%
 
 get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
   
-  withProgress(message = "Querying...", detail = "", expr = {
-    
     query <- {
       "SELECT FROM_ADDRESS as eoa, 
        date_trunc('DAY', block_timestamp) as day_,
@@ -60,21 +53,12 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
     query <- gsub(pattern = "_EOA_ADDRESS_", replacement = tolower(eoa_address),
                   x = query, fixed = TRUE)
     
-    incProgress(amount = 0.1,
-                detail = "Query Created")
-    
-   
-    incProgress(amount = 0.4,
-                detail = "Calculating...")
-    
     df <- shroomDK::auto_paginate_query(query, api_key)
     
-    incProgress(0.5, 
-                detail = "Done!")
+    df$date <- as.Date(df$DAY_)
     
     return(df)
-  })
-  
+
 }
 
 plot_eoa <- function(eoadh = eoa_daily_history, 
@@ -141,8 +125,9 @@ plot_eoa <- function(eoadh = eoa_daily_history,
 
 plot_tx <- function(eoa_tx) {
   
+  
   maxdate <- Sys.Date()
-  mindate <- Sys.Date() - 391
+  mindate <- Sys.Date() - 375
   
   d <- data.frame(
     date = seq.Date(mindate, maxdate, by = 'day')
@@ -158,24 +143,19 @@ plot_tx <- function(eoa_tx) {
   fillweek = floor(nrow(d)/7)*7
   d$week[1:fillweek] <- unlist(lapply(1:(nrow(d)/7), replicate, n = 7))
   
-  
   data <- merge(d, eoa_tx, by = "date", all.x = TRUE)
   data <- data[, c("date","week","month", "day", "NUM_TX")]
   data$NUM_TX[is.na(data$NUM_TX)] <- 0
-  
-  monthlabel = data %>% 
-    group_by(month) %>% 
-    summarise(w1 = first(week)) %>% 
-    dplyr::arrange(w1)
   
   data$day <- toupper(substr(data$day, 1, 3))
   data$day <- ordered(data$day, 
                       levels = c("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"),
                       labels = c("Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"))
   
-    colfunc <- colorRampPalette(c("#C8B1F2", "#4F4A59"))
+  colfunc <- colorRampPalette(c("#C8B1F2", "#4F4A59"))
   
-  data[data$NUM_TX == 0,]$NUM_TX <- 0.01
+  s <- scale(data$NUM_TX)
+  m <- min(s)
   
   hline <- function(y = 0, color = "grey") {
     list(
@@ -189,10 +169,28 @@ plot_tx <- function(eoa_tx) {
     )
   }
   
+  # purposefully grabbed > 1 year to chop to a good Monday and current month.
+  data <- data[-c(1:7), ]
+  
+  monthlabel = data %>% 
+    group_by(month) %>% 
+    summarise(w1 = first(week)) %>% 
+    dplyr::arrange(w1)
+  
+  monthlabel$w1[1] <- 1 
+  
+  initial_months <- months(data$date)[
+    c(which(!(months(data$date)[-nrow(data)] == months(data$date)[-1])),
+      nrow(data) )]
+  
+  # not all months are 4 weeks, so expect some squishing but still readable
+  ticktext = substr(initial_months, 1, 3)
+  tickvals = c(monthlabel$w1, max(monthlabel$w1)+4)
+  
   plot_ly(data,
           x = ~week, 
           y = ~day,
-          marker = list(size = ~log(NUM_TX + 1,base = 1.15), 
+          marker = list(size = ~4*(scale(data$NUM_TX) - m), 
                         color = "#423E75",
                         line = list(width = 0, color = "#423E75")
           ),
@@ -200,12 +198,13 @@ plot_tx <- function(eoa_tx) {
             data$day,", ",
             data$date,
             "\nTransactions:",
-            round(data$NUM_TX)
-          ),
+            data$NUM_TX),
           hoverinfo = 'text', 
           type = 'scatter', mode = "markers") %>%
     layout(
-      shapes = list(hline(-0.5), hline(0.5), hline(1.5), hline(2.5), hline(3.5), hline(4.5), hline(5.5), hline(6.5)),
+      shapes = list(hline(-0.5), hline(0.5), hline(1.5), 
+                    hline(2.5), hline(3.5), 
+                    hline(4.5), hline(5.5), hline(6.5)),
       font = list(
         family = "Roboto Mono",
         color = "#423E75"),
@@ -231,9 +230,10 @@ plot_tx <- function(eoa_tx) {
         zeroline = FALSE,
         color = "#423E75",
         ticklen = 0,
-        tickwidth = 0,
-        ticktext = c(monthlabel$month,monthlabel$month[1]),
-        tickvals = c(monthlabel$w1, max(monthlabel$w1)+4),
+        tickwidth = 1,
+        tickangle = 0,
+        ticktext = ticktext,
+        tickvals = tickvals,
         title = ""
       )) %>%
     plotly::config(scrollZoom = FALSE,

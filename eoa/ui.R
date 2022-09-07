@@ -11,7 +11,8 @@ shinyUI(fluidPage(
     tags$link(rel = 'stylesheet', type = 'text/css', href = 'styles.css'),
     tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Roboto+Mono'),
     tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Inter'),
-    tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Architects+Daughter')
+    tags$link(rel = 'stylesheet', href = 'https://fonts.googleapis.com/css?family=Architects+Daughter'),
+    tags$link(rel = "icon", href = "fliptrans.png")
   ),
   tags$head(tags$script(src = 'rudderstack.js')),
   tags$style(type='text/css',
@@ -80,7 +81,7 @@ shinyUI(fluidPage(
                    style = "border-width: 0 0 1px 0;",
                    div(style = "width: 100%",
                        div("Daily Punchcard"), br(),
-                       plotlyOutput('heatmap', width = "100%", height = "300px")
+                       plotlyOutput('heatmap', width = "100%", height = "325px")
                    ), br(),
             )
           )),
@@ -95,7 +96,7 @@ shinyUI(fluidPage(
         column(6, class = 'light',
                style = "border-width: 0 0 1px 0;",
                div(style = "height: 60px; width: 100%",
-                   "More Active Than", div(class = "show-result", textOutput("percentile"))))
+                   "Your Activity Rank", div(class = "show-result", textOutput("percentile"))))
       ),
       
       fluidRow(

@@ -308,7 +308,7 @@ input[type=number] {
   width: auto;
 }
 .socials a:last-child::before {
-  content: "|";
+  content: " ";
   margin: 0 0.5em;
 }
 .twitter {

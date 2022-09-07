@@ -23,15 +23,13 @@ shinyUI(fluidPage(
   withTags({
     header(class='top-banner',
            section(
-             a(class='fs-logo', href='https://www.flipsidecrypto.com', 
-               'Flipside Crypto', onclick = 'rudderstack.track("ntr-click-flipside-icon")'),
+             a(class='fs-logo', href='https://https://sdk.flipsidecrypto.xyz/shroomdk', 
+               'Powered by ShroomDK', onclick = 'rudderstack.track("ntr-click-flipside-icon")'),
              section(class='socials',
                      a(class='twitter', href='https://twitter.com/flipsidecrypto',
                        'Twitter', onclick = 'rudderstack.track("ntr-click-twitter-icon")'),
                      a(class='discord', href='https://flipsidecrypto.com/discord',
-                       'Discord', onclick = 'rudderstack.track("ntr-click-discord-icon")'),
-                     a(href='https://app.flipsidecrypto.com/auth/signup/', # redirects to xyz signup
-                       'Join Us', onclick = 'rudderstack.track("ntr-click-signup-icon")')
+                       ' ', onclick = 'rudderstack.track("ntr-click-discord-icon")')
              )
            )
     )
@@ -117,9 +115,9 @@ shinyUI(fluidPage(
         column(6, class = 'light foot', style = "border-width: 0 1px 1px 0;",
                div(style = "height: 60px; width: 100%",
                    HTML(
-                     paste0(
-                       "Built w/ ❤️ by the team at Flipside Crypto. Powered by ",
-                       "<a href = 'https://sdk.flipsidecrypto.xyz/shroomdk'>ShroomDK</a>"
+                     paste0("Built w/ ❤️ by the team at ",
+                     a(class='fs-logo', href='https://https://sdk.flipsidecrypto.xyz/shroomdk', 
+                       'Flipside Crypto', onclick = 'rudderstack.track("ntr-click-flipside-icon")')
                      ))
                )),
         column(6, class = 'light foot', style = "border-width: 0 0 1px 0;",

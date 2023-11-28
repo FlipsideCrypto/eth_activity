@@ -53,9 +53,9 @@ get_tx_by_day <- function(eoa_address, api_key = api_key, ttl = 0){
     query <- gsub(pattern = "_EOA_ADDRESS_", replacement = tolower(eoa_address),
                   x = query, fixed = TRUE)
     
-    df <- shroomDK::auto_paginate_query(query, api_key)
-    
-    df$date <- as.Date(df$DAY_)
+    df <- shroomDK::auto_paginate_query(query = query, api_key = api_key)
+    colnames(df) <- tolower(colnames(df))
+    df$date <- as.Date(df$day_)
     
     return(df)
 
@@ -125,7 +125,6 @@ plot_eoa <- function(eoadh = eoa_daily_history,
 
 plot_tx <- function(eoa_tx) {
   
-  
   maxdate <- Sys.Date()
   mindate <- Sys.Date() - 375
   
@@ -144,8 +143,8 @@ plot_tx <- function(eoa_tx) {
   d$week[1:fillweek] <- unlist(lapply(1:(nrow(d)/7), replicate, n = 7))
   
   data <- merge(d, eoa_tx, by = "date", all.x = TRUE)
-  data <- data[, c("date","week","month", "day", "NUM_TX")]
-  data$NUM_TX[is.na(data$NUM_TX)] <- 0
+  data <- data[, c("date","week","month", "day", "num_tx")]
+  data$num_tx[is.na(data$num_tx)] <- 0
   
   data$day <- toupper(substr(data$day, 1, 3))
   data$day <- ordered(data$day, 
@@ -154,7 +153,7 @@ plot_tx <- function(eoa_tx) {
   
   colfunc <- colorRampPalette(c("#C8B1F2", "#4F4A59"))
   
-  s <- scale(data$NUM_TX)
+  s <- scale(data$num_tx)
   m <- min(s)
   
   hline <- function(y = 0, color = "grey") {
@@ -190,7 +189,7 @@ plot_tx <- function(eoa_tx) {
   plot_ly(data,
           x = ~week, 
           y = ~day,
-          marker = list(size = ~4*(scale(data$NUM_TX) - m), 
+          marker = list(size = ~4*(scale(data$num_tx) - m), 
                         color = "#423E75",
                         line = list(width = 0, color = "#423E75")
           ),
@@ -198,7 +197,7 @@ plot_tx <- function(eoa_tx) {
             data$day,", ",
             data$date,
             "\nTransactions:",
-            data$NUM_TX),
+            data$num_tx),
           hoverinfo = 'text', 
           type = 'scatter', mode = "markers") %>%
     layout(

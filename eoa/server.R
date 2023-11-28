@@ -29,11 +29,9 @@ shinyServer(function(input, output, session) {
                       detail = "Calculating...")
           
           x <- get_tx_by_day(eoa_address = input$address,
-                             api_key = api_key,
-                             ttl = 0)
+                             api_key = api_key)
+          results$table <- x
           
-          incProgress(0.5, 
-                      detail = "Done!")
         })
         
       }, error = function(e){
@@ -48,11 +46,17 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  
+  observe({
+    rr <<- results$table
+    
+  })
+  
   eoa_stats <- reactive({
     eoa_activity <- list(
-      "txn" = sum(results$table$NUM_TX),
+      "txn" = sum(results$table$num_tx),
       "days" = length(unique(results$table$date)),
-      "fees" = paste0(round(sum(results$table$FEES_PAID),2), ' Ξ')
+      "fees" = paste0(round(sum(results$table$fees_paid),2), ' Ξ')
     )
   })
   
@@ -63,7 +67,7 @@ shinyServer(function(input, output, session) {
   
   output$favorite_days <- renderText({
     ifelse(eoa_stats()$txn > 0,
-           names(which.max(table(rep(weekdays(results$table$date), results$table$NUM_TX)))),
+           names(which.max(table(rep(weekdays(results$table$date), results$table$num_tx)))),
            "")
     })
   
@@ -105,6 +109,6 @@ shinyServer(function(input, output, session) {
     
   })
   
-  output$heatmap <- renderPlotly(plot_tx(results$table))
+   output$heatmap <- renderPlotly(plot_tx(results$table))
   
 })
